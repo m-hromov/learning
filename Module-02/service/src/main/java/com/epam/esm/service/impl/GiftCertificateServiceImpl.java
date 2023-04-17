@@ -1,7 +1,9 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.exception.BusinessException;
 import com.epam.esm.exception.NotFoundException;
+import com.epam.esm.mapper.GiftCertificateMapper;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.repository.GiftCertificateRepository;
@@ -25,6 +27,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateRepository giftCertificateRepository;
     private final TagService tagService;
     private final PatchUtil patchUtil;
+    private final GiftCertificateMapper mapper;
 
     @Override
     public GiftCertificate save(GiftCertificate certificate) {
@@ -42,23 +45,28 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public GiftCertificate findById(Long id) {
+    public GiftCertificateDto findById(Long id) {
         return giftCertificateRepository.findById(id)
+                .map(mapper::map)
                 .orElseThrow(() -> new NotFoundException("Certificate was not found."));
     }
 
     @Override
-    public List<GiftCertificate> getGiftCertificates(Boolean ascendingName, Boolean ascendingCreationDate) {
+    public List<GiftCertificateDto> getGiftCertificates(Boolean ascendingName, Boolean ascendingCreationDate) {
+        List<GiftCertificate> certificates;
         if (Objects.nonNull(ascendingName)) {
-            return getGiftCertificatesSortedByName(ascendingName);
+            certificates = getGiftCertificatesSortedByName(ascendingName);
         } else if (Objects.nonNull(ascendingCreationDate)) {
-            return getGiftCertificatesSortedByCreationDate(ascendingCreationDate);
+            certificates = getGiftCertificatesSortedByCreationDate(ascendingCreationDate);
+        } else {
+            certificates = giftCertificateRepository.findAll();
         }
-        List<GiftCertificate> certificates = giftCertificateRepository.findAll();
         certificates.forEach(certificate -> certificate.setTags(
                 tagService.findAllByCertificateId(certificate.getId()))
         );
-        return certificates;
+        return certificates.stream()
+                .map(mapper::map)
+                .toList();
     }
 
     @Override
@@ -74,7 +82,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public GiftCertificate patchGiftCertificate(GiftCertificate certificate) {
         try {
-            GiftCertificate certificateToBeUpdated = findById(certificate.getId());
+            GiftCertificate certificateToBeUpdated = giftCertificateRepository.findById(certificate.getId())
+                    .orElseThrow(() -> new NotFoundException("Certificate was not found."));
             patchUtil.copyProperties(certificateToBeUpdated, certificate);
             giftCertificateRepository.delete(certificate.getId());
             certificateToBeUpdated.setLastUpdateDate(LocalDateTime.now());

@@ -1,5 +1,7 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.dto.TagDto;
+import com.epam.esm.mapper.TagMapper;
 import com.epam.esm.model.Tag;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
@@ -14,6 +16,7 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
+    private final TagMapper mapper;
 
     @Override
     public Tag save(Tag tag) {
@@ -32,8 +35,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> getTags() {
-        return tagRepository.findAll();
+    public List<TagDto> getTags() {
+        return tagRepository.findAll()
+                .stream()
+                .map(mapper::map)
+                .toList();
     }
 
     @Override

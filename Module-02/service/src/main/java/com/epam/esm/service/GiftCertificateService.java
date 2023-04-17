@@ -1,5 +1,6 @@
 package com.epam.esm.service;
 
+import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 
@@ -9,9 +10,9 @@ import java.util.List;
 public interface GiftCertificateService {
     GiftCertificate save(GiftCertificate certificate);
 
-    GiftCertificate findById(Long id);
+    GiftCertificateDto findById(Long id);
 
-    List<GiftCertificate> getGiftCertificates(Boolean ascendingName, Boolean ascendingCreationDate);
+    List<GiftCertificateDto> getGiftCertificates(Boolean ascendingName, Boolean ascendingCreationDate);
 
     List<GiftCertificate> getGiftCertificatesSortedByCreationDate(boolean ascending);
 
