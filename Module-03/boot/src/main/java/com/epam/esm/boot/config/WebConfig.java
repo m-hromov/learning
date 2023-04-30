@@ -16,13 +16,4 @@ import java.util.List;
 @Configuration
 @ComponentScan(basePackages = {"com.epam.esm"})
 public class WebConfig implements WebMvcConfigurer {
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-    }
-
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new MappingJackson2HttpMessageConverter());
-    }
 }
