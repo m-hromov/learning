@@ -15,6 +15,7 @@ import java.util.List;
 public class GiftCertificate {
     @Id
     @GeneratedValue
+    @Column(name = "gift_certificate_id")
     private Long id;
 
     @Column

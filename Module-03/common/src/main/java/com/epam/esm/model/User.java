@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "USER_TABLE")
 @Data
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class User {
     @Id
     @GeneratedValue
+    @Column(name = "user_id")
     private Long id;
 
     @Column
@@ -22,4 +25,7 @@ public class User {
 
     @Column
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 }
