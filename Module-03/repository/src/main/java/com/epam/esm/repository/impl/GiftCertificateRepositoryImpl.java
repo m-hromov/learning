@@ -11,7 +11,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -48,7 +50,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(connection -> {
             PreparedStatement ps = connection
-                    .prepareStatement(SAVE);
+                    .prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, cert.getName());
             ps.setObject(2, cert.getDescription());
             ps.setObject(3, cert.getPrice());
@@ -57,7 +59,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
             ps.setObject(6, cert.getLastUpdateDate());
             return ps;
         }, keyHolder);
-        return findById(keyHolder.getKeyAs(Long.class))
+        return findById(Objects.requireNonNull(keyHolder.getKeyAs(Integer.class)).longValue())
                 .orElseThrow(() -> new NotFoundException("Certificate was not found."));
     }
 

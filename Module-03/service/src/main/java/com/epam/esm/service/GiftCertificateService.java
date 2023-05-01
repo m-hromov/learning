@@ -5,6 +5,7 @@ import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.Duration;
 import java.util.List;
 
 public interface GiftCertificateService {
@@ -21,4 +22,6 @@ public interface GiftCertificateService {
     GiftCertificate patchGiftCertificate(GiftCertificate certificate);
 
     void delete(Long id);
+
+    GiftCertificateDto updateDuration(Long id, Long duration);
 }

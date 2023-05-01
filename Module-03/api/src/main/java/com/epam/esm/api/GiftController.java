@@ -21,7 +21,7 @@ public class GiftController {
 
     @GetMapping
     public List<GiftCertificateDto> findAll(@RequestParam(required = false) Boolean ascendingName,
-                                         @RequestParam(required = false) Boolean ascendingCreationDate) {
+                                            @RequestParam(required = false) Boolean ascendingCreationDate) {
         return giftCertificateService.getGiftCertificates(ascendingName, ascendingCreationDate);
     }
 
@@ -38,5 +38,10 @@ public class GiftController {
     @DeleteMapping
     public void delete(@RequestParam Long id) {
         giftCertificateService.delete(id);
+    }
+
+    @PostMapping("/{id}/duration")
+    public GiftCertificateDto updateDuration(@PathVariable Long id, @RequestParam Long duration) {
+        return giftCertificateService.updateDuration(id, duration);
     }
 }

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,9 +45,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public GiftCertificateDto findById(Long id) {
-        return giftCertificateRepository.findById(id)
-                .map(mapper::map)
-                .orElseThrow(() -> new NotFoundException("Certificate was not found."));
+        return mapper.map(findByIdOrThrow(id));
     }
 
     @Override
@@ -82,8 +79,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public GiftCertificate patchGiftCertificate(GiftCertificate certificate) {
         try {
-            GiftCertificate certificateToBeUpdated = giftCertificateRepository.findById(certificate.getId())
-                    .orElseThrow(() -> new NotFoundException("Certificate was not found."));
+            GiftCertificate certificateToBeUpdated = findByIdOrThrow(certificate.getId());
             patchUtil.copyProperties(certificateToBeUpdated, certificate);
             giftCertificateRepository.delete(certificate.getId());
             certificateToBeUpdated.setLastUpdateDate(LocalDateTime.now());
@@ -96,5 +92,21 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public void delete(Long id) {
         giftCertificateRepository.delete(id);
+    }
+
+    @Override
+    public GiftCertificateDto updateDuration(Long id, Long duration) {
+        GiftCertificate giftCertificate = patchGiftCertificate(
+                GiftCertificate.builder()
+                        .id(id)
+                        .duration(duration)
+                        .build()
+        );
+        return mapper.map(giftCertificate);
+    }
+
+    private GiftCertificate findByIdOrThrow(Long id) {
+        return giftCertificateRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Certificate was not found."));
     }
 }
