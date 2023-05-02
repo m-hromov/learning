@@ -3,11 +3,13 @@ package com.epam.esm.boot.aop;
 import com.epam.esm.exception.BusinessException;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class ControllerExceptionAdvice {
     @ExceptionHandler(BusinessException.class)
@@ -17,6 +19,7 @@ public class ControllerExceptionAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleServerException(Exception exception) {
+        log.warn("", exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Message.builder()
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)

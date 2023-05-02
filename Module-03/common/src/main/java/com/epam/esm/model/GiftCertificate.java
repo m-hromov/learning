@@ -36,11 +36,23 @@ public class GiftCertificate {
     @Column
     private LocalDateTime lastUpdateDate;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "GIFT_CERTIFICATE_TAG",
             joinColumns = @JoinColumn(name = "gift_certificate_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Tag> tags;
+
+    @PreUpdate
+    private void preUpdate() {
+        this.lastUpdateDate = LocalDateTime.now();
+    }
+
+    @PrePersist
+    private void prePersist() {
+        if (this.createDate == null) {
+            this.createDate = LocalDateTime.now();
+        }
+    }
 }

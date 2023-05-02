@@ -1,116 +1,108 @@
 package com.epam.esm.repository.impl;
 
-import com.epam.esm.exception.NotFoundException;
 import com.epam.esm.model.Tag;
+import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.TagRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceUnit;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
 public class TagRepositoryImpl implements TagRepository {
-    private static final String SAVE = """
-            INSERT INTO tag(name)\040
-            VALUES (?)
-            """;
-    private static final String EXISTS = """
-            SELECT EXISTS(SELECT t.name FROM tag AS t WHERE t.name =?)
-            """;
-    private static final String FIND_BY_ID = """
-            SELECT * FROM tag AS t
-            WHERE t.id = ?
-            """;
     private static final String FIND_BY_NAME = """
-            SELECT * FROM tag AS t
-            WHERE t.name = ?
+            SELECT t FROM Tag t
+            WHERE t.name = :name
             """;
     private static final String FIND_ALL = """
-            SELECT * FROM tag
+            SELECT t FROM Tag t
             """;
     private static final String FIND_ALL_BY_CERTIFICATE = """
-            SELECT t.id, t.name FROM tag AS t
-            JOIN gift_certificate_tag gct ON t.id = gct.tag_id
-            JOIN gift_certificate gc on gct.gift_certificate_id = gc.id
-            WHERE gc.id = ?
+            SELECT tag FROM User u
+            JOIN Order o
+            JOIN GiftCertificate gc
+            JOIN gc.tags tag
+            WHERE gc.id = :gcId
             """;
-    private static final String DELETE = """
-            DELETE FROM tag WHERE id = ?
+    private static final String FIND_MOST_WIDELY_USED_TAG_BY_USER_ID = """
+            SELECT tag FROM User u
+            JOIN Order o
+            JOIN GiftCertificate gc
+            JOIN gc.tags tag
+            WHERE u.id = :userId
+            GROUP BY tag.id
+            HAVING COUNT(tag.id) >= ALL(
+                SELECT COUNT(tag.id) FROM User u
+                JOIN Order o
+                JOIN GiftCertificate gc
+                JOIN gc.tags tag
+                WHERE u.id = :userId
+                GROUP BY tag.id
+            )
+            AND
+            SUM(o.cost) >= ALL(
+                SELECT SUM(o.cost) FROM User u
+                JOIN Order o
+                JOIN GiftCertificate gc
+                JOIN gc.tags tag
+                WHERE u.id = :userId
+                GROUP BY tag.id
+            )
             """;
-    private final JdbcTemplate template;
+    @PersistenceUnit
+    private EntityManager entityManager;
 
     @Override
     public Tag save(Tag tag) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(connection -> {
-            PreparedStatement ps = connection
-                    .prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, tag.getName());
-            return ps;
-        }, keyHolder);
-        return findById(Objects.requireNonNull(keyHolder.getKeyAs(Integer.class)).longValue())
-                .orElseThrow(() -> new NotFoundException("Tag was not found."));
-    }
-
-    @Override
-    public boolean existsByName(String name) {
-        return Boolean.TRUE.equals(template.queryForObject(
-                EXISTS,
-                Boolean.class,
-                name
-        ));
+        entityManager.persist(tag);
+        return tag;
     }
 
     @Override
     public Optional<Tag> findById(Long id) {
-        return template.query(
-                        FIND_BY_ID,
-                        new BeanPropertyRowMapper<>(Tag.class),
-                        id
-                )
-                .stream()
-                .findFirst();
+        return Optional.ofNullable(entityManager.find(Tag.class, id));
+    }
+
+    @Override
+    public Optional<Tag> findMostWidelyUsedTagOfUserByUserId(Long userId) {
+        TypedQuery<Tag> typedQuery = entityManager.createQuery(FIND_MOST_WIDELY_USED_TAG_BY_USER_ID, Tag.class);
+        typedQuery.setParameter("userId", userId);
+        return Optional.ofNullable(typedQuery.getSingleResult());
     }
 
     @Override
     public Optional<Tag> findByName(String name) {
-        return template.query(
-                        FIND_BY_NAME,
-                        new BeanPropertyRowMapper<>(Tag.class),
-                        name
-                )
-                .stream()
-                .findFirst();
+        TypedQuery<Tag> typedQuery = entityManager.createQuery(FIND_BY_NAME, Tag.class);
+        typedQuery.setParameter("name", name);
+        return typedQuery.getResultStream().findFirst();
     }
 
     @Override
-    public List<Tag> findAll() {
-        return template.query(
-                        FIND_ALL,
-                        new BeanPropertyRowMapper<>(Tag.class)
-                );
+    public List<Tag> findAll(Pageable paging) {
+        TypedQuery<Tag> findAllQuery =
+                entityManager.createQuery(FIND_ALL, Tag.class);
+        findAllQuery.setFirstResult((paging.getPage() - 1) * paging.getSize());
+        findAllQuery.setMaxResults(paging.getSize());
+        return findAllQuery.getResultList();
     }
 
     @Override
     public List<Tag> findAllByGiftCertificateId(Long certificateId) {
-        return template.query(
-                FIND_ALL_BY_CERTIFICATE,
-                new BeanPropertyRowMapper<>(Tag.class),
-                certificateId
-        );
+        TypedQuery<Tag> typedQuery = entityManager.createQuery(FIND_ALL_BY_CERTIFICATE, Tag.class);
+        typedQuery.setParameter("gcId", certificateId);
+        return typedQuery.getResultList();
     }
 
     @Override
     public void delete(Long id) {
-        template.update(DELETE, id);
+        Tag tag = entityManager.find(Tag.class, id);
+        entityManager.remove(tag);
     }
 }

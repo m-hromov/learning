@@ -27,31 +27,31 @@ public class LoggingAspect {
 
     @Before("allInService()")
     private void logAllInService(JoinPoint jp) {
-        log.info("Request to {}", jp.getSignature());
+        log.info("Request to {}", jp.getSignature().getName());
     }
 
     @Before("allRestEndpoints()")
     private void logRestRequest(JoinPoint jp) throws JsonProcessingException {
-        log.info("Request to {}", jp.getSignature());
-        log.info("Body:\n{}", mapper.writeValueAsString(jp.getArgs()));
+        log.info("Request to {}", jp.getSignature().toShortString());
+        log.info("Body:\n{}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jp.getArgs()));
     }
 
     @AfterReturning(value = "allRestEndpoints()", returning = "response")
     private void logRestResponse(JoinPoint jp, ResponseEntity<?> response) throws JsonProcessingException {
-        log.info("Response for: {}", jp.getSignature());
+        log.info("Response for: {}", jp.getSignature().toShortString());
         log.info("Status: {}", response.getStatusCode());
-        log.debug("Body:\n{}", mapper.writeValueAsString(response.getBody()));
+        log.debug("Body:\n{}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
     }
 
     @AfterThrowing(value = "allRestEndpoints()", throwing = "exception")
     private void logRestBusinessException(JoinPoint jp, BusinessException exception) {
-        log.info("Error for: {}", jp.getSignature());
+        log.info("Error for: {}", jp.getSignature().toShortString());
         log.warn("Error message: {}", exception.getMessage());
     }
 
     @AfterThrowing(value = "allRestEndpoints()", throwing = "exception")
     private void logRestRuntimeException(JoinPoint jp, RuntimeException exception) {
         if (!(exception instanceof BusinessException))
-            log.warn("Error for: {}", jp.getSignature(), exception);
+            log.warn("Error for: {}", jp.getSignature().toShortString(), exception);
     }
 }

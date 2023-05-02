@@ -2,7 +2,9 @@ package com.epam.esm.api;
 
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.model.Tag;
+import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.service.TagService;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +18,19 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping
-    public List<TagDto> findAll() {
-        return tagService.getTags();
+    public List<TagDto> findAll(@RequestParam(defaultValue = "1") @Min(1) int page,
+                                @RequestParam(defaultValue = "10") @Min(1) int size) {
+        return tagService.getTags(
+                Pageable.builder()
+                        .page(page)
+                        .size(size)
+                        .build()
+        );
+    }
+
+    @GetMapping("/most-widely-used/{userId}")
+    public TagDto findMostWidelyUsedTagForUser(@PathVariable Long userId) {
+        return tagService.findMostWidelyUsedTagOfUserByUserId(userId);
     }
 
     @PostMapping
