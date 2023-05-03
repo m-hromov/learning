@@ -4,6 +4,7 @@ import com.epam.esm.model.Order;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.OrderRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class OrderRepositoryImpl implements OrderRepository {
             JOIN Order o
             WHERE u.id = :userId
             """;
-    @PersistenceUnit
+    @PersistenceContext
     private EntityManager entityManager;
 
     @Override

@@ -4,6 +4,7 @@ import com.epam.esm.model.Tag;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.TagRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +57,7 @@ public class TagRepositoryImpl implements TagRepository {
                 GROUP BY tag.id
             )
             """;
-    @PersistenceUnit
+    @PersistenceContext
     private EntityManager entityManager;
 
     @Override

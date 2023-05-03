@@ -5,6 +5,7 @@ import com.epam.esm.model.User;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.UserRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String FIND_ALL = """
             SELECT u FROM User u
             """;
-    @PersistenceUnit
+    @PersistenceContext
     private EntityManager entityManager;
 
     @Override
