@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderRepository {
+    Order save(Order order);
+
     List<Order> findUserOrders(Long userId, Pageable pageable);
 
     Optional<Order> findById(Long orderId);

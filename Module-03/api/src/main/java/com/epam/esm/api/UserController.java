@@ -48,6 +48,12 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/{userId}/orders")
+    public ResponseEntity<OrderDto> findAllUserOrders(@PathVariable Long userId,
+                                                      @RequestParam Long certId) {
+        return ResponseEntity.ok(orderService.createOrder(userId, certId));
+    }
+
     @GetMapping("/orders/{orderId}")
     public ResponseEntity<OrderInfoDto> findOrderInfo(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.findOrderInfo(orderId));

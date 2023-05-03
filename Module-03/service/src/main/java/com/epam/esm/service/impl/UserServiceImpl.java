@@ -2,6 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dto.UserLoginRequestDto;
 import com.epam.esm.dto.UserLoginResponseDto;
+import com.epam.esm.exception.NotFoundException;
 import com.epam.esm.mapper.UserMapper;
 import com.epam.esm.model.User;
 import com.epam.esm.model.paging.Pageable;
@@ -37,5 +38,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
         userRepository.delete(id);
+    }
+
+    @Override
+    public User findByIdOrThrow(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User was not found."));
     }
 }

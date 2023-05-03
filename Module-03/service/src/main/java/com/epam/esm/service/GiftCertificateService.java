@@ -22,4 +22,6 @@ public interface GiftCertificateService {
     void delete(Long id);
 
     GiftCertificateDto updateDuration(Long id, Long duration);
+
+    GiftCertificate findByIdOrThrow(Long id);
 }

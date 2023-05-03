@@ -90,7 +90,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return mapper.map(giftCertificate);
     }
 
-    private GiftCertificate findByIdOrThrow(Long id) {
+    @Override
+    public GiftCertificate findByIdOrThrow(Long id) {
         return giftCertificateRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Certificate was not found."));
     }

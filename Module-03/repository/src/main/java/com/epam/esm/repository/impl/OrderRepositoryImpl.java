@@ -25,6 +25,12 @@ public class OrderRepositoryImpl implements OrderRepository {
     private EntityManager entityManager;
 
     @Override
+    public Order save(Order order) {
+        entityManager.persist(order);
+        return order;
+    }
+
+    @Override
     public List<Order> findUserOrders(Long userId, Pageable pageable) {
         TypedQuery<Order> findAllQuery =
                 entityManager.createQuery(FIND_ALL, Order.class);
