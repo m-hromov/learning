@@ -28,9 +28,9 @@ public class TagController {
         );
     }
 
-    @GetMapping("/most-widely-used/{userId}")
-    public TagDto findMostWidelyUsedTagForUser(@PathVariable Long userId) {
-        return tagService.findMostWidelyUsedTagOfUserByUserId(userId);
+    @GetMapping("/most-widely-used")
+    public TagDto findMostWidelyUsedTagForUser() {
+        return tagService.findMostWidelyUsedTagOfUserWithHighestOrderCost();
     }
 
     @PostMapping

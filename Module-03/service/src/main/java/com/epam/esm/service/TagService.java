@@ -15,5 +15,5 @@ public interface TagService {
 
     void delete(Long id);
 
-    TagDto findMostWidelyUsedTagOfUserByUserId(Long userId);
+    TagDto findMostWidelyUsedTagOfUserWithHighestOrderCost();
 }

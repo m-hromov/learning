@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TagRepository extends CrdRepository<Long, Tag> {
-    Optional<Tag> findMostWidelyUsedTagOfUserByUserId(Long userId);
+    Optional<Tag> findMostWidelyUsedTagOfUserWithHighestOrderCost();
 
     Optional<Tag> findByName(String name);
 

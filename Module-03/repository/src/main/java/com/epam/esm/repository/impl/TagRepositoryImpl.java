@@ -1,15 +1,13 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.model.Tag;
+import com.epam.esm.model.User;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.TagRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceUnit;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,31 +25,34 @@ public class TagRepositoryImpl implements TagRepository {
             """;
     private static final String FIND_ALL_BY_CERTIFICATE = """
             SELECT tag FROM User u
-            JOIN Order o
-            JOIN GiftCertificate gc
+            JOIN Order o ON o.user = u
+            JOIN GiftCertificate gc ON o.giftCertificate = gc
             JOIN gc.tags tag
             WHERE gc.id = :gcId
             """;
+    private static final String FIND_USER_WITH_HIGEST_ORDER_COST = """
+            SELECT u FROM User u 
+            JOIN Order o ON o.user = u
+            JOIN GiftCertificate gc ON o.giftCertificate = gc
+            JOIN gc.tags tag
+            GROUP BY u.id
+            HAVING SUM(o.cost) >= ALL(
+                SELECT SUM (o.cost) FROM User u 
+                JOIN Order o ON o.user = u
+                GROUP BY u.id
+            )
+            """;
     private static final String FIND_MOST_WIDELY_USED_TAG_BY_USER_ID = """
             SELECT tag FROM User u
-            JOIN Order o
-            JOIN GiftCertificate gc
+            JOIN Order o ON o.user = u
+            JOIN GiftCertificate gc ON o.giftCertificate = gc
             JOIN gc.tags tag
             WHERE u.id = :userId
             GROUP BY tag.id
             HAVING COUNT(tag.id) >= ALL(
                 SELECT COUNT(tag.id) FROM User u
-                JOIN Order o
-                JOIN GiftCertificate gc
-                JOIN gc.tags tag
-                WHERE u.id = :userId
-                GROUP BY tag.id
-            )
-            AND
-            SUM(o.cost) >= ALL(
-                SELECT SUM(o.cost) FROM User u
-                JOIN Order o
-                JOIN GiftCertificate gc
+                JOIN Order o ON o.user = u
+                JOIN GiftCertificate gc ON o.giftCertificate = gc
                 JOIN gc.tags tag
                 WHERE u.id = :userId
                 GROUP BY tag.id
@@ -72,10 +73,16 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public Optional<Tag> findMostWidelyUsedTagOfUserByUserId(Long userId) {
+    public Optional<Tag> findMostWidelyUsedTagOfUserWithHighestOrderCost() {
+        TypedQuery<User> typedUserQuery = entityManager.createQuery(FIND_USER_WITH_HIGEST_ORDER_COST, User.class);
         TypedQuery<Tag> typedQuery = entityManager.createQuery(FIND_MOST_WIDELY_USED_TAG_BY_USER_ID, Tag.class);
-        typedQuery.setParameter("userId", userId);
-        return Optional.ofNullable(typedQuery.getSingleResult());
+        return typedUserQuery.getResultStream()
+                .findFirst()
+                .map(User::getId)
+                .flatMap(userId -> {
+                    typedQuery.setParameter("userId", userId);
+                    return typedQuery.getResultStream().findFirst();
+                });
     }
 
     @Override

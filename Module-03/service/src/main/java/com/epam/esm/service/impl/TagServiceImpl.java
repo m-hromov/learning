@@ -44,10 +44,9 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDto findMostWidelyUsedTagOfUserByUserId(Long userId) {
-        return tagRepository.findMostWidelyUsedTagOfUserByUserId(userId)
+    public TagDto findMostWidelyUsedTagOfUserWithHighestOrderCost() {
+        return tagRepository.findMostWidelyUsedTagOfUserWithHighestOrderCost()
                 .map(mapper::map)
-                .orElseThrow(() ->
-                        new NotFoundException(String.format("Tag was not found for user with id '%s", userId)));
+                .orElseThrow(() -> new NotFoundException("Tag was not found"));
     }
 }
