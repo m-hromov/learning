@@ -5,7 +5,6 @@ import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.OrderRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceUnit;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,7 +17,7 @@ import java.util.Optional;
 public class OrderRepositoryImpl implements OrderRepository {
     private static final String FIND_ALL = """
             SELECT o FROM User u
-            JOIN Order o
+            JOIN Order o ON o.user = u
             WHERE u.id = :userId
             """;
     @PersistenceContext
