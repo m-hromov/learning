@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "GIFT_CERTIFICATE")
+@Table(name = "GIFT_CERTIFICATE_TABLE")
 @Data
 @Builder
 @AllArgsConstructor
