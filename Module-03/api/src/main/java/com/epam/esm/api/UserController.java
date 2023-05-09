@@ -1,6 +1,6 @@
 package com.epam.esm.api;
 
-import com.epam.esm.dto.UserLoginRequestDto;
+import com.epam.esm.dto.UserRegisterRequestDto;
 import com.epam.esm.dto.UserLoginResponseDto;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.service.OrderService;
@@ -33,9 +33,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserLoginResponseDto> login(@RequestBody UserLoginRequestDto requestDto) {
+    public ResponseEntity<UserLoginResponseDto> register(@RequestBody UserRegisterRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userService.login(requestDto));
+                .body(userService.register(requestDto));
     }
 
     @DeleteMapping

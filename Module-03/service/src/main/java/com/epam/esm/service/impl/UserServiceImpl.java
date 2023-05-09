@@ -1,6 +1,6 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dto.UserLoginRequestDto;
+import com.epam.esm.dto.UserRegisterRequestDto;
 import com.epam.esm.dto.UserLoginResponseDto;
 import com.epam.esm.exception.NotFoundException;
 import com.epam.esm.mapper.UserMapper;
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserLoginResponseDto login(UserLoginRequestDto requestDto) {
+    public UserLoginResponseDto register(UserRegisterRequestDto requestDto) {
         User user = mapper.map(requestDto);
         return mapper.map(userRepository.save(user));
     }
