@@ -51,7 +51,7 @@ public class GiftController {
         giftCertificateService.delete(id);
     }
 
-    @PostMapping("/{id}/duration")
+    @PatchMapping("/{id}/duration")
     public GiftCertificateDto updateDuration(@PathVariable Long id, @RequestParam Long duration) {
         return giftCertificateService.updateDuration(id, duration);
     }
