@@ -1,5 +1,6 @@
 package com.epam.esm.service;
 
+import com.epam.esm.dto.CreateOrderRequestDto;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.OrderInfoDto;
 import com.epam.esm.dto.TagDto;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface OrderService {
     List<OrderDto> findUserOrders(Long userId, Pageable pageable);
-    OrderDto createOrder(Long userId, Long certId);
+    OrderDto createOrder(CreateOrderRequestDto requestDto);
 
     OrderInfoDto findOrderInfo(Long orderId);
 }

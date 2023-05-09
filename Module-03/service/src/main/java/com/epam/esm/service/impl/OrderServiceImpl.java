@@ -1,5 +1,6 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.dto.CreateOrderRequestDto;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.OrderInfoDto;
@@ -38,9 +39,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto createOrder(Long userId, Long certId) {
-        GiftCertificate giftCertificate = giftCertificateService.findByIdOrThrow(certId);
-        User user = userService.findByIdOrThrow(certId);
+    public OrderDto createOrder(CreateOrderRequestDto requestDto) {
+        GiftCertificate giftCertificate = giftCertificateService.findByIdOrThrow(requestDto.getGiftCertificateId());
+        User user = userService.findByIdOrThrow(requestDto.getUserId());
         Order order = Order.builder()
                 .cost(giftCertificate.getPrice())
                 .giftCertificate(giftCertificate)

@@ -1,7 +1,5 @@
 package com.epam.esm.api;
 
-import com.epam.esm.dto.OrderDto;
-import com.epam.esm.dto.OrderInfoDto;
 import com.epam.esm.dto.UserLoginRequestDto;
 import com.epam.esm.dto.UserLoginResponseDto;
 import com.epam.esm.model.paging.Pageable;
@@ -32,31 +30,6 @@ public class UserController {
                         .build()
         );
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/{userId}/orders")
-    public ResponseEntity<List<OrderDto>> findAllUserOrders(@PathVariable Long userId,
-                                                            @RequestParam(defaultValue = "1") @Min(1) int page,
-                                                            @RequestParam(defaultValue = "10") @Min(1) int size) {
-        List<OrderDto> response = orderService.findUserOrders(
-                userId,
-                Pageable.builder()
-                        .page(page)
-                        .size(size)
-                        .build()
-        );
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/{userId}/orders")
-    public ResponseEntity<OrderDto> findAllUserOrders(@PathVariable Long userId,
-                                                      @RequestParam Long certId) {
-        return ResponseEntity.ok(orderService.createOrder(userId, certId));
-    }
-
-    @GetMapping("/orders/{orderId}")
-    public ResponseEntity<OrderInfoDto> findOrderInfo(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderService.findOrderInfo(orderId));
     }
 
     @PostMapping
