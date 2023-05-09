@@ -1,6 +1,10 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/learning-db
-    username: MarkedOne
-    password: GuysIcaughtAnOlive
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1;
+    username: learn
+    password: learn
+    driver-class-name: org.h2.Driver
+
+hibernate:
+  dialect: org.hibernate.dialect.PostgreSQLDialect
+  ddl-auto: update

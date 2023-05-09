@@ -2,6 +2,7 @@ package com.epam.esm.boot.config;
 
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,11 @@ import java.util.Properties;
 @EnableTransactionManagement
 @RequiredArgsConstructor
 public class HibernateConfig {
+    @Value("${hibernate.dialect}")
+    private String hibernateDialect;
+    @Value("${hibernate.ddl-auto}")
+    private String ddlAuto;
+
     @Bean
     public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
@@ -31,8 +37,8 @@ public class HibernateConfig {
 
     private Properties jpaProperties() {
         Properties properties = new Properties();
-        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        properties.put("hibernate.hbm2ddl.auto", "update");
+        properties.put("hibernate.dialect", hibernateDialect);
+        properties.put("hibernate.hbm2ddl.auto", ddlAuto);
         return properties;
     }
 }
