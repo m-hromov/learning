@@ -9,4 +9,6 @@ public interface GiftCertificateRepository extends CrdRepository<Long, GiftCerti
     List<GiftCertificate> findAllOrderedByName(String order, Pageable paging);
 
     List<GiftCertificate> findAllOrderedByCreationDate(String order, Pageable paging);
+
+    List<GiftCertificate> findAllWithTags(List<Long> tags, Pageable paging);
 }

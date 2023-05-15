@@ -53,6 +53,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
+    public List<GiftCertificateDto> getGiftCertificatesWithTags(List<Long> tags, Pageable paging) {
+        return giftCertificateRepository.findAllWithTags(tags, paging)
+                .stream()
+                .map(mapper::map)
+                .toList();
+    }
+
+    @Override
     public List<GiftCertificate> getGiftCertificatesSortedByCreationDate(boolean ascending, Pageable paging) {
         return giftCertificateRepository.findAllOrderedByCreationDate(ascending ? "ASC" : "DESC", paging);
     }

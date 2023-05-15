@@ -37,7 +37,7 @@ public class GiftCertificate {
     private LocalDateTime lastUpdateDate;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "GIFT_CERTIFICATE_TAG",
+    @JoinTable(name = "GIFT_CERTIFICATE_TAG_TABLE",
             joinColumns = @JoinColumn(name = "gift_certificate_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     @ToString.Exclude

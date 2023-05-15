@@ -19,6 +19,7 @@ public class ControllerExceptionAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleServerException(Exception exception) {
+        log.error("", exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Message.builder()
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)

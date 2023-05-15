@@ -11,4 +11,6 @@ public interface TagRepository extends CrdRepository<Long, Tag> {
     Optional<Tag> findByName(String name);
 
     List<Tag> findAllByGiftCertificateId(Long certificateId);
+
+    void deleteAll();
 }

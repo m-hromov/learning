@@ -7,11 +7,15 @@ import com.epam.esm.service.OrderService;
 import com.epam.esm.service.UserService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/users")
@@ -34,8 +38,21 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserLoginResponseDto> register(@RequestBody UserRegisterRequestDto requestDto) {
+        UserLoginResponseDto responseDto = userService.register(requestDto);
+        responseDto.add(
+                linkTo(methodOn(UserController.class).register(requestDto)).withSelfRel()
+        );
+        responseDto.add(
+                linkTo(
+                        methodOn(OrderController.class).findAllUserOrders(
+                                responseDto.getId(),
+                                1,
+                                10
+                        )
+                ).withSelfRel()
+        );
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userService.register(requestDto));
+                .body(responseDto);
     }
 
     @DeleteMapping

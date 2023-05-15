@@ -13,6 +13,8 @@ public interface GiftCertificateService {
 
     List<GiftCertificateDto> getGiftCertificates(Boolean ascendingName, Boolean ascendingCreationDate, Pageable paging);
 
+    List<GiftCertificateDto> getGiftCertificatesWithTags(List<Long> tags, Pageable paging);
+
     List<GiftCertificate> getGiftCertificatesSortedByCreationDate(boolean ascending, Pageable paging);
 
     List<GiftCertificate> getGiftCertificatesSortedByName(boolean ascending, Pageable paging);

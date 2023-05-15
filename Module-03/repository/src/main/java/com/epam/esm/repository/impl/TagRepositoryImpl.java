@@ -23,6 +23,9 @@ public class TagRepositoryImpl implements TagRepository {
     private static final String FIND_ALL = """
             SELECT t FROM Tag t
             """;
+    private static final String DELETE_ALL = """
+            DELETE FROM Tag
+            """;
     private static final String FIND_ALL_BY_CERTIFICATE = """
             SELECT tag FROM User u
             JOIN Order o ON o.user = u
@@ -106,6 +109,11 @@ public class TagRepositoryImpl implements TagRepository {
         TypedQuery<Tag> typedQuery = entityManager.createQuery(FIND_ALL_BY_CERTIFICATE, Tag.class);
         typedQuery.setParameter("gcId", certificateId);
         return typedQuery.getResultList();
+    }
+
+    @Override
+    public void deleteAll() {
+        entityManager.createQuery(DELETE_ALL).executeUpdate();
     }
 
     @Override

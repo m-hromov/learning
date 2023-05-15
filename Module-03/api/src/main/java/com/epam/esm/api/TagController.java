@@ -7,6 +7,7 @@ import com.epam.esm.service.TagService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/tags")
 @RequiredArgsConstructor
+@Validated
 public class TagController {
     private final TagService tagService;
 

@@ -1,18 +1,13 @@
 package com.epam.esm.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDto {
+public class OrderDto extends RepresentationModel<OrderDto> {
     private Long orderId;
     private Long giftCertificateId;
 }
