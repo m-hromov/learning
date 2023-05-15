@@ -1,6 +1,6 @@
 package com.epam.esm.api;
 
-import com.epam.esm.boot.LearningApplication;
+import com.epam.esm.LearningApplication;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.model.Tag;
 import com.epam.esm.repository.TagRepository;

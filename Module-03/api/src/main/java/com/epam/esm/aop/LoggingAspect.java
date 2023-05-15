@@ -1,4 +1,4 @@
-package com.epam.esm.boot.aop;
+package com.epam.esm.aop;
 
 import com.epam.esm.exception.BusinessException;
 import com.fasterxml.jackson.core.JsonProcessingException;

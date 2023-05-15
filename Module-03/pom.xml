@@ -11,10 +11,11 @@
 
     <modules>
         <module>api</module>
-        <module>boot</module>
         <module>common</module>
         <module>repository</module>
+        <module>repository-impl</module>
         <module>service</module>
+        <module>service-impl</module>
         <module>mapping</module>
     </modules>
 
@@ -36,12 +37,6 @@
 
             <dependency>
                 <groupId>com.epam.esm</groupId>
-                <artifactId>boot</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.epam.esm</groupId>
                 <artifactId>common</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -54,20 +49,26 @@
 
             <dependency>
                 <groupId>com.epam.esm</groupId>
+                <artifactId>repository-impl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.epam.esm</groupId>
                 <artifactId>service</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.epam.esm</groupId>
-                <artifactId>mapping</artifactId>
+                <artifactId>service-impl</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.epam.esm</groupId>
                 <artifactId>mapping</artifactId>
-                <version>${project.version</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>

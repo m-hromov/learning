@@ -1,4 +1,4 @@
-package com.epam.esm.boot.config;
+package com.epam.esm.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

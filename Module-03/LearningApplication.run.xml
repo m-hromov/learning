@@ -1,14 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="LearningApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+  <configuration default="false" name="LearningApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="dev" />
-    <module name="boot" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="com.epam.esm.boot.LearningApplication" />
-    <extension name="coverage">
-      <pattern>
-        <option name="PATTERN" value="com.epam.esm.boot.*" />
-        <option name="ENABLED" value="true" />
-      </pattern>
-    </extension>
+    <module name="api" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.epam.esm.LearningApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
