@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1;
+    username: learn
+    password: learn
+    driver-class-name: org.h2.Driver
+
+hibernate:
+  dialect: org.hibernate.dialect.H2Dialect
+  ddl-auto: update
