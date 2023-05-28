@@ -21,9 +21,10 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private static final String FIND_ALL_WITH_TAGS = """
             SELECT gc FROM GiftCertificate gc
             JOIN gc.tags tag
-            WHERE tag.id IN (:tags)
-            GROUP BY gc
-            HAVING COUNT(gc) = :tagsCount
+            JOIN Tag t ON t.id = tag.id
+            WHERE t.id IN (:tags)
+            GROUP BY gc.id
+            HAVING COUNT(gc.id) = :tagsCount
             """;
     private static final String FIND_ALL_ORDERED_BY_NAME = """
             SELECT gc FROM GiftCertificate gc ORDER BY gc.name %s
@@ -68,7 +69,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     public List<GiftCertificate> findAllWithTags(List<Long> tags, Pageable paging) {
         TypedQuery<GiftCertificate> findAllQuery =
                 entityManager.createQuery(FIND_ALL_WITH_TAGS, GiftCertificate.class);
-        findAllQuery.setFirstResult(paging.getPage() * paging.getSize());
+        findAllQuery.setFirstResult((paging.getPage() - 1) * paging.getSize());
         findAllQuery.setMaxResults(paging.getSize());
         findAllQuery.setParameter("tags", tags);
         findAllQuery.setParameter("tagsCount", tags.size());
@@ -78,7 +79,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private List<GiftCertificate> findAllOrdered(String order, Pageable paging, String query) {
         TypedQuery<GiftCertificate> findAllQuery =
                 entityManager.createQuery(String.format(query, order), GiftCertificate.class);
-        findAllQuery.setFirstResult(paging.getPage() * paging.getSize());
+        findAllQuery.setFirstResult((paging.getPage() - 1) * paging.getSize());
         findAllQuery.setMaxResults(paging.getSize());
         return findAllQuery.getResultList();
     }
