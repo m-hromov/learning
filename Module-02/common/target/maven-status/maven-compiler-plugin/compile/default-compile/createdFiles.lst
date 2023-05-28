@@ -1,0 +1,10 @@
+com\epam\esm\exception\BusinessException.class
+com\epam\esm\model\Tag.class
+com\epam\esm\dto\TagDto.class
+com\epam\esm\model\GiftCertificate$GiftCertificateBuilder.class
+com\epam\esm\dto\TagDto$TagDtoBuilder.class
+com\epam\esm\dto\GiftCertificateDto.class
+com\epam\esm\dto\GiftCertificateDto$GiftCertificateDtoBuilder.class
+com\epam\esm\exception\NotFoundException.class
+com\epam\esm\model\Tag$TagBuilder.class
+com\epam\esm\model\GiftCertificate.class
