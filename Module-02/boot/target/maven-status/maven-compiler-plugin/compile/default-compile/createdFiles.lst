@@ -1,5 +1,0 @@
-com\epam\esm\boot\aop\ControllerLoggingAdvice.class
-com\epam\esm\boot\config\WebConfig.class
-com\epam\esm\boot\LearningApplicationInitializer.class
-com\epam\esm\boot\config\DataSourceConfig.class
-com\epam\esm\boot\aop\ControllerExceptionAdvice.class
