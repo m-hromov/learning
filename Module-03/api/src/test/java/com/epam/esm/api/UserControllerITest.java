@@ -2,12 +2,15 @@ package com.epam.esm.api;
 
 import com.epam.esm.LearningApplication;
 import com.epam.esm.dto.TagDto;
+import com.epam.esm.dto.UserLoginResponseDto;
+import com.epam.esm.dto.UserRegisterRequestDto;
 import com.epam.esm.model.Tag;
+import com.epam.esm.model.User;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.TagRepository;
+import com.epam.esm.repository.UserRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,8 +30,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
@@ -36,28 +38,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(
         classes = LearningApplication.class
 )
-class TagControllerITest {
-    private final Tag tag1 = Tag.builder().name("tag1").build();
-    private final Tag tag2 = Tag.builder().name("tag2").build();
-    private final Tag tag3 = Tag.builder().name("tag3").build();
+class UserControllerITest {
+    private final User user1 = User.builder().username("user1").password("pass").build();
+    private final User user2 = User.builder().username("user2").password("pass").build();
+    private final User user3 = User.builder().username("user3").password("pass").build();
     @Autowired
     private MockMvc mvc;
     @Autowired
-    private TagRepository tagRepository;
+    private UserRepository userRepository;
     @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
-        tagRepository.save(tag1);
-        tagRepository.save(tag2);
-        tagRepository.save(tag3);
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
     }
 
     @ParameterizedTest
     @MethodSource("validCases")
     void testFindAll(String page, String size, int expectedRespSize) throws Exception {
-        MvcResult mvcResult = mvc.perform(get("/tags").accept(MediaType.APPLICATION_JSON)
+        MvcResult mvcResult = mvc.perform(get("/users").accept(MediaType.APPLICATION_JSON)
                         .param("page", page)
                         .param("size", size))
                 .andExpect(status().isOk())
@@ -82,14 +84,16 @@ class TagControllerITest {
 
     @Test
     void testFindAllWhenNoTags() throws Exception {
-        tagRepository.deleteAll();
+        userRepository.delete(user1.getId());
+        userRepository.delete(user2.getId());
+        userRepository.delete(user3.getId());
 
-        MvcResult mvcResult = mvc.perform(get("/tags").accept(MediaType.APPLICATION_JSON)
+        MvcResult mvcResult = mvc.perform(get("/users").accept(MediaType.APPLICATION_JSON)
                         .param("page", "1")
                         .param("size", "10"))
                 .andExpect(status().isOk())
                 .andReturn();
-        List<TagDto> response = objectMapper.readValue(
+        List<UserLoginResponseDto> response = objectMapper.readValue(
                 mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
                 }
         );
@@ -97,7 +101,30 @@ class TagControllerITest {
         assertThat(response).isEmpty();
     }
 
-    //TODO: Maybe better use standalone mockMvc setup for this test
+    @Test
+    void testRegister() throws Exception {
+        userRepository.delete(user1.getId());
+        userRepository.delete(user2.getId());
+        userRepository.delete(user3.getId());
+        UserRegisterRequestDto userRegisterRequestDto = UserRegisterRequestDto.builder()
+                .username("usssername")
+                .password("passs")
+                .build();
+
+        MvcResult mvcResult = mvc.perform(post("/users").accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userRegisterRequestDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+        UserLoginResponseDto response = objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
+                }
+        );
+
+        assertThat(response.getId()).isNotNull();
+        assertThat(response.getUsername()).isEqualTo(userRegisterRequestDto.getUsername());
+    }
+
     @ParameterizedTest(name = "{index} => page: {0}, size: {1}")
     @CsvSource(delimiterString = "&&", textBlock = """
              1  &&  0
@@ -106,10 +133,12 @@ class TagControllerITest {
              0  && -1
             -1  && -1
             """)
-    void testFindAllWhenNoTags(String page, String size) throws Exception {
-        tagRepository.deleteAll();
+    void testFindAllWhenNoUsers(String page, String size) throws Exception {
+        userRepository.delete(user1.getId());
+        userRepository.delete(user2.getId());
+        userRepository.delete(user3.getId());
 
-        mvc.perform(get("/tags").accept(MediaType.APPLICATION_JSON)
+        mvc.perform(get("/users").accept(MediaType.APPLICATION_JSON)
                         .param("page", page)
                         .param("size", size))
                 .andExpect(status().isInternalServerError())
@@ -118,16 +147,16 @@ class TagControllerITest {
 
     @Test
     void testDelete() throws Exception {
-        mvc.perform(delete("/tags").accept(MediaType.APPLICATION_JSON)
-                        .param("id", tag1.getId().toString()))
+        mvc.perform(delete("/users").accept(MediaType.APPLICATION_JSON)
+                        .param("id", user1.getId().toString()))
                 .andExpect(status().isOk());
-        mvc.perform(delete("/tags").accept(MediaType.APPLICATION_JSON)
-                        .param("id", tag2.getId().toString()))
+        mvc.perform(delete("/users").accept(MediaType.APPLICATION_JSON)
+                        .param("id", user2.getId().toString()))
                 .andExpect(status().isOk());
-        mvc.perform(delete("/tags").accept(MediaType.APPLICATION_JSON)
-                        .param("id", tag3.getId().toString()))
+        mvc.perform(delete("/users").accept(MediaType.APPLICATION_JSON)
+                        .param("id", user3.getId().toString()))
                 .andExpect(status().isOk());
 
-        assertTrue(tagRepository.findAll(Pageable.builder().page(1).size(10).build()).isEmpty());
+        assertTrue(userRepository.findAll(Pageable.builder().page(1).size(10).build()).isEmpty());
     }
 }
