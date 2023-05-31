@@ -7,6 +7,8 @@ import com.epam.esm.service.OrderService;
 import com.epam.esm.service.UserService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,7 @@ public class UserController {
     private final OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<List<UserLoginResponseDto>> findAll(@RequestParam(defaultValue = "1") @Min(1) int page,
+    public ResponseEntity<CollectionModel<UserLoginResponseDto>> findAll(@RequestParam(defaultValue = "1") @Min(1) int page,
                                                               @RequestParam(defaultValue = "10") @Min(1) int size) {
         List<UserLoginResponseDto> response = userService.findAll(
                 Pageable.builder()
@@ -35,7 +37,17 @@ public class UserController {
                         .size(size)
                         .build()
         );
-        return ResponseEntity.ok(response);
+        response.forEach(user ->
+                user.add(
+                        linkTo(
+                                methodOn(OrderController.class).findAllUserOrders(user.getId(), 1 ,10)
+                        ).withRel("findAllUserOrders")
+                )
+        );
+        Link selfLink = linkTo(
+                methodOn(UserController.class).findAll(page, size)
+        ).withSelfRel();
+        return ResponseEntity.ok(CollectionModel.of(response, selfLink));
     }
 
     @PostMapping

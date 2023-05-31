@@ -7,7 +7,7 @@ import com.epam.esm.model.paging.Pageable;
 import java.util.List;
 
 public interface GiftCertificateService {
-    GiftCertificate save(GiftCertificate certificate);
+    GiftCertificateDto save(GiftCertificate certificate);
 
     GiftCertificateDto findById(Long id);
 
@@ -19,7 +19,7 @@ public interface GiftCertificateService {
 
     List<GiftCertificate> getGiftCertificatesSortedByName(boolean ascending, Pageable paging);
 
-    GiftCertificate patchGiftCertificate(GiftCertificate certificate);
+    GiftCertificateDto patchGiftCertificate(GiftCertificate certificate);
 
     void delete(Long id);
 

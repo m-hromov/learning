@@ -51,7 +51,7 @@ class GiftCertificateServiceImplTest {
 
         when(certificateRepository.save(giftCertificate)).thenAnswer(AdditionalAnswers.returnsFirstArg());
 
-        GiftCertificate result = certificateService.save(giftCertificate);
+        GiftCertificateDto result = certificateService.save(giftCertificate);
 
         assertNotNull(result);
     }
@@ -135,7 +135,7 @@ class GiftCertificateServiceImplTest {
         when(certificateRepository.save(giftCertificate))
                 .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
-        GiftCertificate result = certificateService.patchGiftCertificate(updatedGiftCertificate);
+        GiftCertificateDto result = certificateService.patchGiftCertificate(updatedGiftCertificate);
 
         verify(patchUtil).copyProperties(giftCertificate, updatedGiftCertificate);
         verify(certificateRepository).delete(giftCertificate.getId());

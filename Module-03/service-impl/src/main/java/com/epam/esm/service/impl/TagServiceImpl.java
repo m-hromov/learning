@@ -21,8 +21,8 @@ public class TagServiceImpl implements TagService {
     private final TagMapper mapper;
 
     @Override
-    public Tag save(Tag tag) {
-        return tagRepository.save(tag);
+    public TagDto save(Tag tag) {
+        return mapper.map(tagRepository.save(tag));
     }
 
     @Override

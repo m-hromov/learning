@@ -6,11 +6,17 @@ import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.service.TagService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/tags")
@@ -20,25 +26,51 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping
-    public List<TagDto> findAll(@RequestParam(defaultValue = "1") @Min(1) int page,
-                                @RequestParam(defaultValue = "10") @Min(1) int size) {
-        return tagService.getTags(
+    public ResponseEntity<CollectionModel<TagDto>> findAll(@RequestParam(defaultValue = "1") @Min(1) int page,
+                                                           @RequestParam(defaultValue = "10") @Min(1) int size) {
+        List<TagDto> response = tagService.getTags(
                 Pageable.builder()
                         .page(page)
                         .size(size)
                         .build()
         );
+        return ResponseEntity.ok(CollectionModel.of(response,
+                linkTo(
+                        methodOn(TagController.class).findAll(page, size)
+                ).withSelfRel(),
+                linkTo(
+                        methodOn(TagController.class).findMostWidelyUsedTagForUser()
+                ).withRel("findMostWidelyUsedTagForUser")));
     }
 
     @GetMapping("/most-widely-used")
-    public TagDto findMostWidelyUsedTagForUser() {
-        return tagService.findMostWidelyUsedTagOfUserWithHighestOrderCost();
+    public ResponseEntity<TagDto> findMostWidelyUsedTagForUser() {
+        TagDto responseDto = tagService.findMostWidelyUsedTagOfUserWithHighestOrderCost();
+        responseDto.add(
+                linkTo(
+                        methodOn(TagController.class).findMostWidelyUsedTagForUser()
+                ).withSelfRel()
+        );
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(responseDto);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody Tag tag) {
-        tagService.save(tag);
+    public ResponseEntity<TagDto> create(@RequestBody Tag tag) {
+        TagDto responseDto = tagService.save(tag);
+        responseDto.add(
+                linkTo(
+                        methodOn(TagController.class).create(
+                                tag
+                        )
+                ).withSelfRel(),
+                linkTo(
+                        methodOn(TagController.class).findMostWidelyUsedTagForUser()
+                ).withRel("findMostWidelyUsedTagForUser")
+        );
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(responseDto);
     }
 
     @DeleteMapping

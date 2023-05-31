@@ -11,6 +11,8 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -94,13 +96,36 @@ public class GiftController {
     }
 
     @PostMapping
-    public void create(@RequestBody GiftCertificate certificate) {
-        giftCertificateService.save(certificate);
+    public ResponseEntity<GiftCertificateDto> create(@RequestBody GiftCertificate certificate) {
+        GiftCertificateDto response = giftCertificateService.save(certificate);
+        response.add(
+                linkTo(
+                        methodOn(GiftController.class).create(certificate)
+                ).withSelfRel(),
+                linkTo(
+                        methodOn(GiftController.class).patch(certificate)
+                ).withRel("patch"),
+                linkTo(
+                        methodOn(GiftController.class).findById(response.getId())
+                ).withRel("findById")
+        );
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @PatchMapping
-    public void patch(@RequestBody GiftCertificate certificate) {
-        giftCertificateService.patchGiftCertificate(certificate);
+    public ResponseEntity<GiftCertificateDto> patch(@RequestBody GiftCertificate certificate) {
+        GiftCertificateDto response = giftCertificateService.patchGiftCertificate(certificate);
+        response.add(
+                linkTo(
+                        methodOn(GiftController.class).patch(certificate)
+                ).withSelfRel(),
+                linkTo(
+                        methodOn(GiftController.class).findById(response.getId())
+                ).withRel("findById")
+        );
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @DeleteMapping

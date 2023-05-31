@@ -7,7 +7,7 @@ import com.epam.esm.model.paging.Pageable;
 import java.util.List;
 
 public interface TagService {
-    Tag save(Tag tag);
+    TagDto save(Tag tag);
 
     List<Tag> findAllByCertificateId(Long id);
 

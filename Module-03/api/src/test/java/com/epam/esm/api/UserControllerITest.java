@@ -1,16 +1,14 @@
 package com.epam.esm.api;
 
 import com.epam.esm.LearningApplication;
-import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.UserLoginResponseDto;
 import com.epam.esm.dto.UserRegisterRequestDto;
-import com.epam.esm.model.Tag;
 import com.epam.esm.model.User;
 import com.epam.esm.model.paging.Pageable;
-import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.UserRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,12 +23,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
@@ -49,29 +47,6 @@ class UserControllerITest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setUp() {
-        userRepository.save(user1);
-        userRepository.save(user2);
-        userRepository.save(user3);
-    }
-
-    @ParameterizedTest
-    @MethodSource("validCases")
-    void testFindAll(String page, String size, int expectedRespSize) throws Exception {
-        MvcResult mvcResult = mvc.perform(get("/users").accept(MediaType.APPLICATION_JSON)
-                        .param("page", page)
-                        .param("size", size))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        List<TagDto> response = objectMapper.readValue(
-                mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
-                }
-        );
-        assertThat(response).hasSize(expectedRespSize);
-    }
-
     private static Stream<Arguments> validCases() {
         return Stream.of(
                 Arguments.of("1", "1", 1),
@@ -82,23 +57,41 @@ class UserControllerITest {
         );
     }
 
+    @BeforeEach
+    void setUp() {
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
+    }
+
+    @ParameterizedTest
+    @MethodSource("validCases")
+    void testFindAll(String page, String size, int expectedRespSize) throws Exception {
+        if (expectedRespSize == 0) {
+            mvc.perform(get("/users").accept(MediaType.APPLICATION_JSON)
+                            .param("page", page)
+                            .param("size", size))
+                    .andExpect(status().isOk()).andExpect(jsonPath("$._embedded").doesNotExist());
+        } else {
+            mvc.perform(get("/users").accept(MediaType.APPLICATION_JSON)
+                            .param("page", page)
+                            .param("size", size))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$._embedded.userLoginResponseDtoList.*", Matchers.hasSize(expectedRespSize)));
+        }
+    }
+
     @Test
     void testFindAllWhenNoTags() throws Exception {
         userRepository.delete(user1.getId());
         userRepository.delete(user2.getId());
         userRepository.delete(user3.getId());
 
-        MvcResult mvcResult = mvc.perform(get("/users").accept(MediaType.APPLICATION_JSON)
+        mvc.perform(get("/users").accept(MediaType.APPLICATION_JSON)
                         .param("page", "1")
                         .param("size", "10"))
                 .andExpect(status().isOk())
-                .andReturn();
-        List<UserLoginResponseDto> response = objectMapper.readValue(
-                mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
-                }
-        );
-
-        assertThat(response).isEmpty();
+                .andExpect(jsonPath("$._embedded").doesNotExist());
     }
 
     @Test

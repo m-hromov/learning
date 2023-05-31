@@ -7,6 +7,7 @@ import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.TagRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -29,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
@@ -57,17 +60,19 @@ class TagControllerITest {
     @ParameterizedTest
     @MethodSource("validCases")
     void testFindAll(String page, String size, int expectedRespSize) throws Exception {
-        MvcResult mvcResult = mvc.perform(get("/tags").accept(MediaType.APPLICATION_JSON)
-                        .param("page", page)
-                        .param("size", size))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        List<TagDto> response = objectMapper.readValue(
-                mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
-                }
-        );
-        assertThat(response).hasSize(expectedRespSize);
+        if (expectedRespSize == 0) {
+            mvc.perform(get("/tags").accept(MediaType.APPLICATION_JSON)
+                            .param("page", page)
+                            .param("size", size))
+                    .andExpect(status().isOk())
+                    .andExpect(status().isOk()).andExpect(jsonPath("$._embedded").doesNotExist());
+        } else {
+            mvc.perform(get("/tags").accept(MediaType.APPLICATION_JSON)
+                            .param("page", page)
+                            .param("size", size))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$._embedded.tagDtoList.*", Matchers.hasSize(expectedRespSize)));
+        }
     }
 
     private static Stream<Arguments> validCases() {
@@ -84,17 +89,11 @@ class TagControllerITest {
     void testFindAllWhenNoTags() throws Exception {
         tagRepository.deleteAll();
 
-        MvcResult mvcResult = mvc.perform(get("/tags").accept(MediaType.APPLICATION_JSON)
+        mvc.perform(get("/tags").accept(MediaType.APPLICATION_JSON)
                         .param("page", "1")
                         .param("size", "10"))
                 .andExpect(status().isOk())
-                .andReturn();
-        List<TagDto> response = objectMapper.readValue(
-                mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
-                }
-        );
-
-        assertThat(response).isEmpty();
+                .andExpect(status().isOk()).andExpect(jsonPath("$._embedded").doesNotExist());
     }
 
     //TODO: Maybe better use standalone mockMvc setup for this test

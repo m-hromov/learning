@@ -26,8 +26,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateMapper mapper;
 
     @Override
-    public GiftCertificate save(GiftCertificate certificate) {
-        return giftCertificateRepository.save(certificate);
+    public GiftCertificateDto save(GiftCertificate certificate) {
+        return mapper.map(giftCertificateRepository.save(certificate));
     }
 
     @Override
@@ -71,12 +71,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public GiftCertificate patchGiftCertificate(GiftCertificate certificate) {
+    public GiftCertificateDto patchGiftCertificate(GiftCertificate certificate) {
         try {
             GiftCertificate certificateToBeUpdated = findByIdOrThrow(certificate.getId());
             patchUtil.copyProperties(certificateToBeUpdated, certificate);
             giftCertificateRepository.delete(certificate.getId());
-            return giftCertificateRepository.save(certificateToBeUpdated);
+            return mapper.map(giftCertificateRepository.save(certificateToBeUpdated));
         } catch (Exception e) {
             throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "Error updating fields.");
         }
@@ -89,13 +89,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public GiftCertificateDto updateDuration(Long id, Long duration) {
-        GiftCertificate giftCertificate = patchGiftCertificate(
+        GiftCertificateDto giftCertificate = patchGiftCertificate(
                 GiftCertificate.builder()
                         .id(id)
                         .duration(duration)
                         .build()
         );
-        return mapper.map(giftCertificate);
+        return giftCertificate;
     }
 
     @Override
