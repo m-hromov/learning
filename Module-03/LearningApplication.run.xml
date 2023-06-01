@@ -1,90 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Learning Tomacat 10" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Learning Tomacat 10" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
-    <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/gifts" />
-    <option name="UPDATING_POLICY" value="restart-server" />
-    <deployment>
-      <artifact name="boot:war">
-        <settings>
-          <option name="CONTEXT_PATH" value="/" />
-        </settings>
-      </artifact>
-    </deployment>
-    <server-settings>
-      <option name="BASE_DIRECTORY_NAME" value="3a2a543e-b754-4ead-89a6-23d6378b34a9" />
-    </server-settings>
-    <predefined_log_file enabled="true" id="Tomcat" />
-    <predefined_log_file enabled="true" id="Tomcat Catalina" />
-    <predefined_log_file id="Tomcat Manager" />
-    <predefined_log_file id="Tomcat Host Manager" />
-    <predefined_log_file id="Tomcat Localhost Access" />
-    <RunnerSettings RunnerId="Debug">
-      <option name="DEBUG_PORT" value="58697" />
-    </RunnerSettings>
-    <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
-      <option name="USE_ENV_VARIABLES" value="true" />
-      <STARTUP>
-        <option name="USE_DEFAULT" value="true" />
-        <option name="SCRIPT" value="" />
-        <option name="VM_PARAMETERS" value="" />
-        <option name="PROGRAM_PARAMETERS" value="" />
-      </STARTUP>
-      <SHUTDOWN>
-        <option name="USE_DEFAULT" value="true" />
-        <option name="SCRIPT" value="" />
-        <option name="VM_PARAMETERS" value="" />
-        <option name="PROGRAM_PARAMETERS" value="" />
-      </SHUTDOWN>
-    </ConfigurationWrapper>
-    <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Debug">
-      <option name="USE_ENV_VARIABLES" value="true" />
-      <STARTUP>
-        <option name="USE_DEFAULT" value="true" />
-        <option name="SCRIPT" value="" />
-        <option name="VM_PARAMETERS" value="" />
-        <option name="PROGRAM_PARAMETERS" value="" />
-      </STARTUP>
-      <SHUTDOWN>
-        <option name="USE_DEFAULT" value="true" />
-        <option name="SCRIPT" value="" />
-        <option name="VM_PARAMETERS" value="" />
-        <option name="PROGRAM_PARAMETERS" value="" />
-      </SHUTDOWN>
-    </ConfigurationWrapper>
-    <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Profile">
-      <option name="USE_ENV_VARIABLES" value="true" />
-      <STARTUP>
-        <option name="USE_DEFAULT" value="true" />
-        <option name="SCRIPT" value="" />
-        <option name="VM_PARAMETERS" value="" />
-        <option name="PROGRAM_PARAMETERS" value="" />
-      </STARTUP>
-      <SHUTDOWN>
-        <option name="USE_DEFAULT" value="true" />
-        <option name="SCRIPT" value="" />
-        <option name="VM_PARAMETERS" value="" />
-        <option name="PROGRAM_PARAMETERS" value="" />
-      </SHUTDOWN>
-    </ConfigurationWrapper>
-    <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
-      <option name="USE_ENV_VARIABLES" value="true" />
-      <STARTUP>
-        <option name="USE_DEFAULT" value="true" />
-        <option name="SCRIPT" value="" />
-        <option name="VM_PARAMETERS" value="" />
-        <option name="PROGRAM_PARAMETERS" value="" />
-      </STARTUP>
-      <SHUTDOWN>
-        <option name="USE_DEFAULT" value="true" />
-        <option name="SCRIPT" value="" />
-        <option name="VM_PARAMETERS" value="" />
-        <option name="PROGRAM_PARAMETERS" value="" />
-      </SHUTDOWN>
-    </ConfigurationWrapper>
+  <configuration default="false" name="LearningApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="dev" />
+    <module name="api" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.epam.esm.LearningApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
-      <option name="BuildArtifacts" enabled="true">
-        <artifact name="boot:war" />
-      </option>
     </method>
   </configuration>
 </component>

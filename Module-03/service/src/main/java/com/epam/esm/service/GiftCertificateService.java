@@ -2,23 +2,28 @@ package com.epam.esm.service;
 
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.model.GiftCertificate;
-import com.epam.esm.model.Tag;
+import com.epam.esm.model.paging.Pageable;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public interface GiftCertificateService {
-    GiftCertificate save(GiftCertificate certificate);
+    GiftCertificateDto save(GiftCertificate certificate);
 
     GiftCertificateDto findById(Long id);
 
-    List<GiftCertificateDto> getGiftCertificates(Boolean ascendingName, Boolean ascendingCreationDate);
+    List<GiftCertificateDto> getGiftCertificates(Boolean ascendingName, Boolean ascendingCreationDate, Pageable paging);
 
-    List<GiftCertificate> getGiftCertificatesSortedByCreationDate(boolean ascending);
+    List<GiftCertificateDto> getGiftCertificatesWithTags(List<Long> tags, Pageable paging);
 
-    List<GiftCertificate> getGiftCertificatesSortedByName(boolean ascending);
+    List<GiftCertificate> getGiftCertificatesSortedByCreationDate(boolean ascending, Pageable paging);
 
-    GiftCertificate patchGiftCertificate(GiftCertificate certificate);
+    List<GiftCertificate> getGiftCertificatesSortedByName(boolean ascending, Pageable paging);
+
+    GiftCertificateDto patchGiftCertificate(GiftCertificate certificate);
 
     void delete(Long id);
+
+    GiftCertificateDto updateDuration(Long id, Long duration);
+
+    GiftCertificate findByIdOrThrow(Long id);
 }
