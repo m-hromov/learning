@@ -1,11 +1,9 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.UserLoginResponseDto;
 import com.epam.esm.dto.UserRegisterRequestDto;
 import com.epam.esm.exception.NotFoundException;
 import com.epam.esm.mapper.UserMapperImpl;
-import com.epam.esm.model.Tag;
 import com.epam.esm.model.User;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.UserRepository;
@@ -49,7 +47,7 @@ class UserServiceImplTest {
     void register() {
         UserRegisterRequestDto user = UserRegisterRequestDto.builder().username("name").build();
 
-        userService.register(user);
+        userService.signup(user);
 
         verify(userRepository).save(mapper.map(user));
     }

@@ -20,6 +20,10 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String FIND_ALL = """
             SELECT u FROM User u
             """;
+    private static final String FIND_BY_USERNAME = """
+            SELECT u FROM User u
+            WHERE u.username = :username
+            """;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -47,5 +51,12 @@ public class UserRepositoryImpl implements UserRepository {
     public void delete(Long id) {
         User user = entityManager.find(User.class, id);
         entityManager.remove(user);
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        TypedQuery<User> findByUsername = entityManager.createQuery(FIND_BY_USERNAME, User.class);
+        findByUsername.setParameter("username", username);
+        return findByUsername.getResultStream().findFirst();
     }
 }

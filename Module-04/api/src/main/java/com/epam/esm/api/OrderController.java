@@ -5,6 +5,7 @@ import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.OrderInfoDto;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.service.OrderService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +27,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/users/{userId}/orders")
+    @SecurityRequirement(name = "Bearer authentication")
     public ResponseEntity<CollectionModel<OrderDto>> findAllUserOrders(@PathVariable Long userId,
                                                                        @RequestParam(defaultValue = "1") @Min(1) int page,
                                                                        @RequestParam(defaultValue = "10") @Min(1) int size) {
@@ -49,6 +52,7 @@ public class OrderController {
     }
 
     @GetMapping("/users/orders/{orderId}")
+    @SecurityRequirement(name = "Bearer authentication")
     public ResponseEntity<OrderInfoDto> findOrderInfo(@PathVariable Long orderId) {
         OrderInfoDto orderInfoDto = orderService.findOrderInfo(orderId);
         orderInfoDto.add(
@@ -60,6 +64,8 @@ public class OrderController {
     }
 
     @PostMapping("/users/orders")
+    @PreAuthorize("hasAnyAuthority(T(com.epam.esm.Authority).USER.name(), T(com.epam.esm.Authority).ADMIN.name())")
+    @SecurityRequirement(name = "Bearer authentication")
     public ResponseEntity<OrderDto> createOrder(@RequestBody @Valid CreateOrderRequestDto requestDto) {
         OrderDto orderDto = orderService.createOrder(requestDto);
         orderDto.add(

@@ -5,6 +5,7 @@ import com.epam.esm.dto.TagDto;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.service.GiftCertificateService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -96,6 +97,7 @@ public class GiftController {
     }
 
     @PostMapping
+    @SecurityRequirement(name = "Bearer authentication")
     public ResponseEntity<GiftCertificateDto> create(@RequestBody GiftCertificate certificate) {
         GiftCertificateDto response = giftCertificateService.save(certificate);
         response.add(
@@ -114,6 +116,7 @@ public class GiftController {
     }
 
     @PatchMapping
+    @SecurityRequirement(name = "Bearer authentication")
     public ResponseEntity<GiftCertificateDto> patch(@RequestBody GiftCertificate certificate) {
         GiftCertificateDto response = giftCertificateService.patchGiftCertificate(certificate);
         response.add(
@@ -129,11 +132,13 @@ public class GiftController {
     }
 
     @DeleteMapping
+    @SecurityRequirement(name = "Bearer authentication")
     public void delete(@RequestParam Long id) {
         giftCertificateService.delete(id);
     }
 
     @PatchMapping("/{id}/duration")
+    @SecurityRequirement(name = "Bearer authentication")
     public GiftCertificateDto updateDuration(@PathVariable Long id, @RequestParam Long duration) {
         return giftCertificateService.updateDuration(id, duration);
     }
