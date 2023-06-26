@@ -14,6 +14,7 @@
         <module>common</module>
         <module>repository</module>
         <module>repository-impl</module>
+        <module>security</module>
         <module>service</module>
         <module>service-impl</module>
         <module>mapping</module>
@@ -55,6 +56,12 @@
 
             <dependency>
                 <groupId>com.epam.esm</groupId>
+                <artifactId>security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.epam.esm</groupId>
                 <artifactId>service</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -85,6 +92,12 @@
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-jdbc</artifactId>
                 <version>${org.springframework.boot.version}</version>
             </dependency>
@@ -93,6 +106,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-hateoas</artifactId>
                 <version>${org.springframework.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${org.springframework.boot.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>

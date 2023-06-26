@@ -25,6 +25,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.epam.esm</groupId>
+			<artifactId>security</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>

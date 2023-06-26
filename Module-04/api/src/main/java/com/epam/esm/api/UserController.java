@@ -1,15 +1,16 @@
 package com.epam.esm.api;
 
-import com.epam.esm.dto.UserRegisterRequestDto;
+import com.epam.esm.dto.UserLoginRequestDto;
 import com.epam.esm.dto.UserLoginResponseDto;
+import com.epam.esm.dto.UserRegisterRequestDto;
 import com.epam.esm.model.paging.Pageable;
-import com.epam.esm.service.OrderService;
+import com.epam.esm.security.model.SecurityToken;
 import com.epam.esm.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,11 +27,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Validated
 public class UserController {
     private final UserService userService;
-    private final OrderService orderService;
 
     @GetMapping
+    @SecurityRequirement(name = "Bearer authentication")
     public ResponseEntity<CollectionModel<UserLoginResponseDto>> findAll(@RequestParam(defaultValue = "1") @Min(1) int page,
-                                                              @RequestParam(defaultValue = "10") @Min(1) int size) {
+                                                                         @RequestParam(defaultValue = "10") @Min(1) int size) {
         List<UserLoginResponseDto> response = userService.findAll(
                 Pageable.builder()
                         .page(page)
@@ -40,7 +41,7 @@ public class UserController {
         response.forEach(user ->
                 user.add(
                         linkTo(
-                                methodOn(OrderController.class).findAllUserOrders(user.getId(), 1 ,10)
+                                methodOn(OrderController.class).findAllUserOrders(user.getId(), 1, 10)
                         ).withRel("findAllUserOrders")
                 )
         );
@@ -50,27 +51,14 @@ public class UserController {
         return ResponseEntity.ok(CollectionModel.of(response, selfLink));
     }
 
-    @PostMapping
-    public ResponseEntity<UserLoginResponseDto> register(@RequestBody UserRegisterRequestDto requestDto) {
-        UserLoginResponseDto responseDto = userService.register(requestDto);
-        responseDto.add(
-                linkTo(methodOn(UserController.class).register(requestDto)).withSelfRel()
-        );
-        responseDto.add(
-                linkTo(
-                        methodOn(OrderController.class).findAllUserOrders(
-                                responseDto.getId(),
-                                1,
-                                10
-                        )
-                ).withSelfRel()
-        );
+    @PostMapping("signup")
+    public ResponseEntity<SecurityToken> signup(@RequestBody UserRegisterRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(responseDto);
+                .body(userService.signup(requestDto));
     }
 
-    @DeleteMapping
-    public void delete(@RequestParam Long id) {
-        userService.delete(id);
+    @PostMapping("signin")
+    public ResponseEntity<SecurityToken> signin(@RequestBody UserLoginRequestDto requestDto) {
+        return ResponseEntity.ok(userService.signin(requestDto));
     }
 }

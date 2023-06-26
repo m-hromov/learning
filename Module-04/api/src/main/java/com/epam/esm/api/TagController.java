@@ -4,6 +4,7 @@ import com.epam.esm.dto.TagDto;
 import com.epam.esm.model.Tag;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.service.TagService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
@@ -57,6 +58,7 @@ public class TagController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @SecurityRequirement(name = "Bearer authentication")
     public ResponseEntity<TagDto> create(@RequestBody Tag tag) {
         TagDto responseDto = tagService.save(tag);
         responseDto.add(
@@ -74,6 +76,7 @@ public class TagController {
     }
 
     @DeleteMapping
+    @SecurityRequirement(name = "Bearer authentication")
     public void delete(@RequestParam Long id) {
         tagService.delete(id);
     }
