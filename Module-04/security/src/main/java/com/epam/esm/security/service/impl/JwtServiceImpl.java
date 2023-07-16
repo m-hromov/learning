@@ -1,5 +1,6 @@
 package com.epam.esm.security.service.impl;
 
+import com.epam.esm.exception.AuthenticationException;
 import com.epam.esm.exception.NotFoundException;
 import com.epam.esm.model.User;
 import com.epam.esm.repository.UserRepository;
@@ -50,10 +51,14 @@ public class JwtServiceImpl implements JwtService {
                 .parseClaimsJws(token)
                 .getBody()
                 .get("userId"));
-        return userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
                     throw new NotFoundException("User was not found.");
                 });
+        if (!token.equals(user.getJwt())) {
+            throw new AuthenticationException("Jwt expired.");
+        }
+        return user;
     }
 
     @Override

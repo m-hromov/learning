@@ -25,6 +25,9 @@ public class User {
     @Column
     private String password;
 
+    @Column
+    private String jwt;
+
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

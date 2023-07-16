@@ -44,7 +44,10 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         user.setAuthorities(Set.of(Authority.USER));
         user = userRepository.save(user);
-        return jwtService.getSecurityToken(user);
+        SecurityToken token = jwtService.getSecurityToken(user);
+        user.setJwt(token.getAccessToken());
+        userRepository.save(user);
+        return token;
     }
 
     @Override
@@ -55,7 +58,19 @@ public class UserServiceImpl implements UserService {
         if (!passMatches) {
             throw new AuthenticationException("Username or password is not valid");
         }
-        return jwtService.getSecurityToken(user);
+        SecurityToken token = jwtService.getSecurityToken(user);
+        user.setJwt(token.getAccessToken());
+        userRepository.save(user);
+        return token;
+    }
+
+    @Override
+    public void signout(Object principal) {
+        if (principal instanceof Long userId) {
+            User user = findByIdOrThrow(userId);
+            user.setJwt(null);
+            userRepository.save(user);
+        }
     }
 
     @Override

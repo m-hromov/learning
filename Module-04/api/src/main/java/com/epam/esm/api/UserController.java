@@ -13,6 +13,8 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,5 +62,12 @@ public class UserController {
     @PostMapping("signin")
     public ResponseEntity<SecurityToken> signin(@RequestBody UserLoginRequestDto requestDto) {
         return ResponseEntity.ok(userService.signin(requestDto));
+    }
+
+    @PostMapping("signout")
+    @SecurityRequirement(name = "Bearer authentication")
+    public ResponseEntity<Void> signout(@AuthenticationPrincipal Object principal) {
+        userService.signout(principal);
+        return ResponseEntity.ok().build();
     }
 }

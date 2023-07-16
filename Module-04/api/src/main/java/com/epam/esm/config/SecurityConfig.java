@@ -53,6 +53,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers(HttpMethod.GET, PERMITTED_GET_OPERATIONS).permitAll()
                                 .requestMatchers(PERMITTED_ALL_OPERATIONS).permitAll()
+                                .requestMatchers("/users/signout").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/**").hasAnyAuthority(
                                         Authority.ADMIN.name(), Authority.USER.name()
                                 )

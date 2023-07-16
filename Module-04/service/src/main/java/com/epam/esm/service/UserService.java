@@ -16,6 +16,8 @@ public interface UserService {
 
     SecurityToken signin(UserLoginRequestDto requestDto);
 
+    void signout(Object principal);
+
     void delete(Long id);
 
     User findByIdOrThrow(Long id);

@@ -65,6 +65,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException exception) {
             log.warn("JWT is expired");
             resolver.resolveException(request, response, null, new AuthenticationException("JWT is expired"));
+        } catch (AuthenticationException exception) {
+            resolver.resolveException(request, response, null, exception);
         } catch (Exception exception) {
             log.warn("Unauthorized", exception);
             resolver.resolveException(request, response, null, new AuthenticationException("Unauthorized"));
