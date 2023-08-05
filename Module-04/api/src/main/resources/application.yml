@@ -1,13 +1,13 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1;
-    username: learn
-    password: learn
-    driver-class-name: org.h2.Driver
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/learning-db}
+    username: ${DB_USERNAME:MarkedOne}
+    password: ${DB_PASSWORD:GuysIcaughtAnOlive}
+    driver-class-name: org.postgresql.Driver
 
 hibernate:
   dialect: org.hibernate.dialect.PostgreSQLDialect
   ddl-auto: update
 
 security:
-  secret: SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+  secret: SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

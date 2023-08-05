@@ -11,6 +11,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>api</name>
     <description>api</description>
+    <packaging>war</packaging>
 
     <dependencies>
         <dependency>
@@ -150,4 +151,27 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.epam.esm.LearningApplication</mainClass>
+                    <layout>JAR</layout>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <start-class>com.epam.esm.LearningApplication</start-class>
+    </properties>
 </project>
