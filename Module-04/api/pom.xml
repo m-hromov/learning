@@ -158,7 +158,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>com.epam.esm.LearningApplication</mainClass>
-                    <layout>JAR</layout>
+                    <layout>WAR</layout>
                 </configuration>
                 <executions>
                     <execution>
@@ -167,6 +167,11 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
             </plugin>
         </plugins>
     </build>
