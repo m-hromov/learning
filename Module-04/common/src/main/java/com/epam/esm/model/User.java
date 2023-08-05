@@ -1,9 +1,11 @@
 package com.epam.esm.model;
 
+import com.epam.esm.Authority;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "USER_TABLE")
@@ -23,8 +25,16 @@ public class User {
     @Column
     private String password;
 
+    @Column
+    private String jwt;
+
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Order> orders;
+
+    @ElementCollection(targetClass = Authority.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<Authority> authorities;
 }

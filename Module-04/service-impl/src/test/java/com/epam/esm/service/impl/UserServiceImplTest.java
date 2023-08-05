@@ -1,28 +1,26 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.UserLoginResponseDto;
 import com.epam.esm.dto.UserRegisterRequestDto;
 import com.epam.esm.exception.NotFoundException;
 import com.epam.esm.mapper.UserMapperImpl;
-import com.epam.esm.model.Tag;
 import com.epam.esm.model.User;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.UserRepository;
+import com.epam.esm.security.model.SecurityToken;
+import com.epam.esm.security.service.JwtService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -30,6 +28,10 @@ class UserServiceImplTest {
     private UserServiceImpl userService;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @Mock
+    private JwtService jwtService;
     @Spy
     private UserMapperImpl mapper;
 
@@ -48,10 +50,17 @@ class UserServiceImplTest {
     @Test
     void register() {
         UserRegisterRequestDto user = UserRegisterRequestDto.builder().username("name").build();
+        SecurityToken token = SecurityToken.builder().accessToken("jwt").build();
 
-        userService.register(user);
+        when(userRepository.save(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
+        when(jwtService.getSecurityToken(any()))
+                .thenReturn(token);
 
-        verify(userRepository).save(mapper.map(user));
+        userService.signup(user);
+
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository, times(2)).save(captor.capture());
+        assertEquals(token.getAccessToken(), captor.getValue().getJwt());
     }
 
     @Test
@@ -79,5 +88,18 @@ class UserServiceImplTest {
         when(userRepository.findById(any())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> userService.findByIdOrThrow(100L));
+    }
+
+    @Test
+    void testSignout() {
+        Long userId = 123L;
+        User user = User.builder().jwt("someJwt").id(userId).build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        userService.signout(userId);
+
+        verify(userRepository).save(user);
+        assertNull(user.getJwt());
     }
 }
