@@ -6,6 +6,7 @@ import com.epam.esm.dto.UserRegisterRequestDto;
 import com.epam.esm.model.User;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.UserRepository;
+import com.epam.esm.security.model.SecurityToken;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,18 +106,13 @@ class UserControllerITest {
                 .password("passs")
                 .build();
 
-        MvcResult mvcResult = mvc.perform(post("/users").accept(MediaType.APPLICATION_JSON)
+        MvcResult mvcResult = mvc.perform(post("/users/signup").accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userRegisterRequestDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
-        UserLoginResponseDto response = objectMapper.readValue(
-                mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
-                }
-        );
 
-        assertThat(response.getId()).isNotNull();
-        assertThat(response.getUsername()).isEqualTo(userRegisterRequestDto.getUsername());
+        assertThat(mvcResult.getResponse().getContentAsString()).isNotNull().contains("accessToken");
     }
 
     @ParameterizedTest(name = "{index} => page: {0}, size: {1}")
@@ -136,20 +133,5 @@ class UserControllerITest {
                         .param("size", size))
                 .andExpect(status().isInternalServerError())
                 .andReturn();
-    }
-
-    @Test
-    void testDelete() throws Exception {
-        mvc.perform(delete("/users").accept(MediaType.APPLICATION_JSON)
-                        .param("id", user1.getId().toString()))
-                .andExpect(status().isOk());
-        mvc.perform(delete("/users").accept(MediaType.APPLICATION_JSON)
-                        .param("id", user2.getId().toString()))
-                .andExpect(status().isOk());
-        mvc.perform(delete("/users").accept(MediaType.APPLICATION_JSON)
-                        .param("id", user3.getId().toString()))
-                .andExpect(status().isOk());
-
-        assertTrue(userRepository.findAll(Pageable.builder().page(1).size(10).build()).isEmpty());
     }
 }

@@ -26,6 +26,13 @@
         <org.springframework.boot.version>3.0.6</org.springframework.boot.version>
         <org.hibernate.orm.version>6.2.2.Final</org.hibernate.orm.version>
         <org.projectlombok>1.18.26</org.projectlombok>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.coverage.exclusions>
+            **/model/**/*,
+            **/dto/**/*,
+            **/exception/**/*,
+            **/mapper/**/*
+        </sonar.coverage.exclusions>
     </properties>
 
     <dependencyManagement>
@@ -191,6 +198,28 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.8</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <propertyName>jaCoCoArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

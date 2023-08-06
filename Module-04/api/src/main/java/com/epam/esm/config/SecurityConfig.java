@@ -5,6 +5,7 @@ import com.epam.esm.security.filter.JwtAuthFilter;
 import com.epam.esm.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -29,46 +30,54 @@ public class SecurityConfig {
     protected static final String[] PERMITTED_GET_OPERATIONS = {"/gifts/**", "/tags/**"};
     protected static final String[] PERMITTED_ALL_OPERATIONS = {"/users/signin", "/users/signup", "/swagger-ui/**", "/v3/**", "/error"};
     private final AuthenticationEntryPoint authEntryPoint;
-
-    @Bean
-    public JwtAuthFilter jwtAuthFilter(JwtService jwtService,
-                                       @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
-        return new JwtAuthFilter(
-                PERMITTED_GET_OPERATIONS,
-                PERMITTED_ALL_OPERATIONS,
-                jwtService,
-                resolver
-        );
-    }
+    @Value("${security.enabled: true}")
+    private boolean securityEnabled;
 
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            JwtAuthFilter jwtAuthFilter,
+            JwtService jwtService,
+            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver,
             AccessDeniedHandler accessDeniedHandler
     ) throws Exception {
-        return http.formLogin().disable()
-                .csrf()
-                .disable()
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers(HttpMethod.GET, PERMITTED_GET_OPERATIONS).permitAll()
-                                .requestMatchers(PERMITTED_ALL_OPERATIONS).permitAll()
-                                .requestMatchers("/users/signout").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/**").hasAnyAuthority(
-                                        Authority.ADMIN.name(), Authority.USER.name()
-                                )
-                                .anyRequest().hasAuthority(Authority.ADMIN.name())
+        if (securityEnabled) {
+            return http.formLogin().disable()
+                    .csrf()
+                    .disable()
+                    .authorizeHttpRequests(auth ->
+                            auth.requestMatchers(HttpMethod.GET, PERMITTED_GET_OPERATIONS).permitAll()
+                                    .requestMatchers(PERMITTED_ALL_OPERATIONS).permitAll()
+                                    .requestMatchers("/users/signout").permitAll()
+                                    .requestMatchers(HttpMethod.GET, "/**").hasAnyAuthority(
+                                            Authority.ADMIN.name(), Authority.USER.name()
+                                    )
+                                    .anyRequest().hasAuthority(Authority.ADMIN.name())
 
-                )
-                .exceptionHandling()
-                .accessDeniedHandler(accessDeniedHandler)
-                .authenticationEntryPoint(authEntryPoint)
-                .and()
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .build();
+                    )
+                    .exceptionHandling()
+                    .accessDeniedHandler(accessDeniedHandler)
+                    .authenticationEntryPoint(authEntryPoint)
+                    .and()
+                    .addFilterBefore( new JwtAuthFilter(
+                            PERMITTED_GET_OPERATIONS,
+                            PERMITTED_ALL_OPERATIONS,
+                            jwtService,
+                            resolver
+                    ), UsernamePasswordAuthenticationFilter.class)
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .build();
+        } else {
+            return http.formLogin().disable()
+                    .csrf()
+                    .disable()
+                    .authorizeHttpRequests(auth ->
+                            auth.anyRequest().permitAll()
+
+                    )
+                    .build();
+        }
     }
 
     @Bean

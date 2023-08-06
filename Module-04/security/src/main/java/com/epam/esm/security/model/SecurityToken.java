@@ -1,10 +1,10 @@
 package com.epam.esm.security.model;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Data
 @Builder
+@RequiredArgsConstructor
 public class SecurityToken {
     private final String accessToken;
 }
