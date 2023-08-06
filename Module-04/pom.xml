@@ -26,7 +26,11 @@
         <org.springframework.boot.version>3.0.6</org.springframework.boot.version>
         <org.hibernate.orm.version>6.2.2.Final</org.hibernate.orm.version>
         <org.projectlombok>1.18.26</org.projectlombok>
+
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+        <sonar.jacoco.itReportPath>${project.basedir}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
+        <sonar.language>java</sonar.language>
         <sonar.coverage.exclusions>
             **/model/**/*,
             **/dto/**/*,
@@ -204,18 +208,41 @@
                 <version>0.8.8</version>
                 <executions>
                     <execution>
+                        <id>prepare-unit-test-agent</id>
+                        <configuration>
+                        </configuration>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
-                        <configuration>
-                            <propertyName>jaCoCoArgLine</propertyName>
-                        </configuration>
                     </execution>
                     <execution>
-                        <id>report</id>
-                        <phase>test</phase>
+                        <id>jacoco-site</id>
+                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>prepare-it-test-agent</id>
+                        <configuration>
+                            <propertyName>jacoco.agent.argLine</propertyName>
+                            <destFile>${sonar.jacoco.itReportPath}</destFile>
+                            <append>true</append>
+                        </configuration>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
                         </goals>
                     </execution>
                 </executions>
