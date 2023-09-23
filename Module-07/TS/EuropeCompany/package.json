@@ -1,0 +1,11 @@
+{
+  "name": "americancompany",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.ts",
+  "scripts": {
+    "dev": "tsc src/app.ts && node src/app.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
