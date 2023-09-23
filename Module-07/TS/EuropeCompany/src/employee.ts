@@ -1,5 +1,4 @@
 export class Employee {
-
     constructor(private name : string, private project : string) {}
 
     public get getCurrentProject() {
