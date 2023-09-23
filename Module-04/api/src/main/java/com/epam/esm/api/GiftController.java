@@ -10,11 +10,13 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -39,6 +41,7 @@ public class GiftController {
     @GetMapping
     public CollectionModel<GiftCertificateDto> findAll(@RequestParam(required = false) Boolean ascendingName,
                                                        @RequestParam(required = false) Boolean ascendingCreationDate,
+                                                       @RequestParam(required = false) String search,
                                                        @RequestParam(defaultValue = "1") @Min(1) int page,
                                                        @RequestParam(defaultValue = "10") @Min(1) int size) {
         List<GiftCertificateDto> list = giftCertificateService.getGiftCertificates(
@@ -47,7 +50,8 @@ public class GiftController {
                 Pageable.builder()
                         .page(page)
                         .size(size)
-                        .build()
+                        .build(),
+                search
         );
 
         list.forEach(gift -> {
@@ -66,7 +70,7 @@ public class GiftController {
             );
         });
         Link self = linkTo(
-                methodOn(GiftController.class).findAll(ascendingName, ascendingCreationDate, page, size)
+                methodOn(GiftController.class).findAll(ascendingName, ascendingCreationDate, search, page, size)
         ).withSelfRel();
         return CollectionModel.of(list, self);
     }
@@ -98,12 +102,22 @@ public class GiftController {
 
     @PostMapping
     @SecurityRequirement(name = "Bearer authentication")
-    public ResponseEntity<GiftCertificateDto> create(@RequestBody GiftCertificate certificate) {
-        GiftCertificateDto response = giftCertificateService.save(certificate);
+    public ResponseEntity<GiftCertificateDto> create(
+            @RequestParam(required = false, name = "name") String name,
+            @RequestParam(required = false, name = "description") String description,
+            @RequestParam(required = false, name = "price") String price,
+            @RequestParam(required = false, name = "duration") String duration,
+            @RequestParam(required = false, name = "fileSource") MultipartFile file
+
+    ) {
+        GiftCertificate certificate = GiftCertificate.builder()
+                .name(name)
+                .description(description)
+                .price(NumberUtils.toDouble(price))
+                .duration(NumberUtils.toLong(duration))
+                .build();
+        GiftCertificateDto response = giftCertificateService.save(certificate, file);
         response.add(
-                linkTo(
-                        methodOn(GiftController.class).create(certificate)
-                ).withSelfRel(),
                 linkTo(
                         methodOn(GiftController.class).patch(certificate)
                 ).withRel("patch"),

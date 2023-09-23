@@ -13,9 +13,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +31,20 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateMapper mapper;
 
     @Override
-    public GiftCertificateDto save(GiftCertificate certificate) {
+    public GiftCertificateDto save(GiftCertificate certificate, MultipartFile file) {
+        certificate.setPhotoPath(saveFIle(file));
         return mapper.map(giftCertificateRepository.save(certificate));
+    }
+
+    private String saveFIle(MultipartFile file) {
+        try {
+            Path dir = Paths.get("image-storage");
+            Files.createDirectories(dir);
+            Files.copy(file.getInputStream(), dir.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return "http://localhost:8080/image-storage/" + file.getOriginalFilename();
     }
 
     @Override
@@ -38,15 +55,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDto> getGiftCertificates(Boolean ascendingName,
                                                         Boolean ascendingCreationDate,
-                                                        Pageable paging) {
+                                                        Pageable paging, String search) {
         List<GiftCertificate> certificates;
-        if (Objects.nonNull(ascendingName)) {
-            certificates = getGiftCertificatesSortedByName(ascendingName, paging);
-        } else if (Objects.nonNull(ascendingCreationDate)) {
-            certificates = getGiftCertificatesSortedByCreationDate(ascendingCreationDate, paging);
-        } else {
-            certificates = giftCertificateRepository.findAll(paging);
-        }
+//        if (Objects.nonNull(ascendingName)) {
+//            certificates = getGiftCertificatesSortedByName(ascendingName, paging);
+//        } else if (Objects.nonNull(ascendingCreationDate)) {
+//            certificates = getGiftCertificatesSortedByCreationDate(ascendingCreationDate, paging);
+//        } else {
+//        }
+        certificates = giftCertificateRepository.findAll(paging, search);
         return certificates.stream()
                 .map(mapper::map)
                 .toList();

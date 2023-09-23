@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -52,11 +51,11 @@ class TagServiceImplTest {
     void getTags() {
         Pageable pageable = Pageable.builder().size(10).page(10).build();
         Tag tag = Tag.builder().name("name").build();
-        when(tagRepository.findAll(pageable)).thenReturn(List.of(tag));
+        when(tagRepository.findAll(pageable, )).thenReturn(List.of(tag));
 
         List<TagDto> tagDto = tagService.getTags(pageable);
 
-        verify(tagRepository).findAll(pageable);
+        verify(tagRepository).findAll(pageable, );
         assertEquals( tag.getName(), tagDto.get(0).getName());
     }
 

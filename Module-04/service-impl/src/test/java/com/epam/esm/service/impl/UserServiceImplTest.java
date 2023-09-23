@@ -39,11 +39,11 @@ class UserServiceImplTest {
     void findAll() {
         Pageable pageable = Pageable.builder().size(10).page(10).build();
         User user = User.builder().username("name").build();
-        when(userRepository.findAll(pageable)).thenReturn(List.of(user));
+        when(userRepository.findAll(pageable, )).thenReturn(List.of(user));
 
         List<UserLoginResponseDto> userResponse = userService.findAll(pageable);
 
-        verify(userRepository).findAll(pageable);
+        verify(userRepository).findAll(pageable, );
         assertEquals( user.getUsername(), userResponse.get(0).getUsername());
     }
 

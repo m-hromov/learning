@@ -3,15 +3,16 @@ package com.epam.esm.service;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.paging.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface GiftCertificateService {
-    GiftCertificateDto save(GiftCertificate certificate);
+    GiftCertificateDto save(GiftCertificate certificate, MultipartFile file);
 
     GiftCertificateDto findById(Long id);
 
-    List<GiftCertificateDto> getGiftCertificates(Boolean ascendingName, Boolean ascendingCreationDate, Pageable paging);
+    List<GiftCertificateDto> getGiftCertificates(Boolean ascendingName, Boolean ascendingCreationDate, Pageable paging, String search);
 
     List<GiftCertificateDto> getGiftCertificatesWithTags(List<Long> tags, Pageable paging);
 

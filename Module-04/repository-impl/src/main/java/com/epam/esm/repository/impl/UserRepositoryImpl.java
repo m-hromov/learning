@@ -1,12 +1,10 @@
 package com.epam.esm.repository.impl;
 
-import com.epam.esm.model.Tag;
 import com.epam.esm.model.User;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceUnit;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -33,14 +34,18 @@ public class LoggingAspect {
     @Before("allRestEndpoints()")
     private void logRestRequest(JoinPoint jp) throws JsonProcessingException {
         log.info("Request to {}", jp.getSignature().toShortString());
-        log.info("Body:\n{}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jp.getArgs()));
     }
 
     @AfterReturning(value = "allRestEndpoints()", returning = "response")
-    private void logRestResponse(JoinPoint jp, ResponseEntity<?> response) throws JsonProcessingException {
+    private void logRestResponse(JoinPoint jp, CollectionModel<?> response) throws JsonProcessingException {
         log.info("Response for: {}", jp.getSignature().toShortString());
-        log.info("Status: {}", response.getStatusCode());
-        log.debug("Body:\n{}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getBody()));
+        log.info("Body:\n{}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response.getContent()));
+    }
+
+    @AfterReturning(value = "allRestEndpoints()", returning = "response")
+    private void logRestResponse2(JoinPoint jp, Object response) throws JsonProcessingException {
+        log.info("Response for: {}", jp.getSignature().toShortString());
+        log.info("Body:\n{}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response));
     }
 
     @AfterThrowing(value = "allRestEndpoints()", throwing = "exception")

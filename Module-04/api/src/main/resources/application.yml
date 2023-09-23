@@ -4,7 +4,12 @@ spring:
     username: ${DB_USERNAME:MarkedOne}
     password: ${DB_PASSWORD:GuysIcaughtAnOlive}
     driver-class-name: org.postgresql.Driver
-
+  mvc:
+    dispatch-options-request: false
+    static-path-pattern: /image-storage/**
+  servlet:
+    multipart:
+      max-file-size: 10MB
 hibernate:
   dialect: org.hibernate.dialect.PostgreSQLDialect
   ddl-auto: update

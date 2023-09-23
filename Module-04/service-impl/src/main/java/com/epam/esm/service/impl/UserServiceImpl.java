@@ -83,4 +83,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User was not found."));
     }
+
+    @Override
+    public UserLoginResponseDto findById(Long id) {
+        return mapper.map(userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User was not found.")));
+    }
 }
