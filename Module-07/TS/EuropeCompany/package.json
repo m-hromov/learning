@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "test": "npm src/app"
+    "dev": "tsc src/app.ts && node src/app.js"
   },
   "author": "",
   "license": "ISC"

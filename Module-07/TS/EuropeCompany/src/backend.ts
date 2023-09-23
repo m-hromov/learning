@@ -1,4 +1,4 @@
-import { Employee } from "./Employee"
+import { Employee } from "./employee"
 
 export class Backend extends Employee{
 

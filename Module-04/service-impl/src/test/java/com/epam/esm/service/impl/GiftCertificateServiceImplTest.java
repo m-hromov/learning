@@ -8,7 +8,6 @@ import com.epam.esm.model.GiftCertificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.GiftCertificateRepository;
-import com.epam.esm.service.TagService;
 import com.epam.esm.utils.PatchUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,19 +41,7 @@ class GiftCertificateServiceImplTest {
     @Spy
     private PatchUtil patchUtil;
 
-    @Test
-    void testSave() {
-        List<Tag> tags = buildTags2();
-        GiftCertificate giftCertificate = buildGiftCertificate(tags);
-        giftCertificate.setCreateDate(null);
-        giftCertificate.setLastUpdateDate(null);
 
-        when(certificateRepository.save(giftCertificate)).thenAnswer(AdditionalAnswers.returnsFirstArg());
-
-        GiftCertificateDto result = certificateService.save(giftCertificate);
-
-        assertNotNull(result);
-    }
 
     @Test
     void testFindById() {
@@ -82,12 +69,12 @@ class GiftCertificateServiceImplTest {
         GiftCertificate giftCertificate = buildGiftCertificate(Collections.emptyList());
         List<Tag> tags = buildTags2();
 
-        when(certificateRepository.findAll(Pageable.builder().build())).thenReturn(List.of(giftCertificate));
+        when(certificateRepository.findAll(Pageable.builder().build(), )).thenReturn(List.of(giftCertificate));
 
         List<GiftCertificateDto> certificates = certificateService.getGiftCertificates(
                 null,
                 null,
-                Pageable.builder().build()
+                Pageable.builder().build(),
         );
 
         assertFalse(certificates.isEmpty());

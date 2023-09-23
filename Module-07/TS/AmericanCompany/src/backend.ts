@@ -1,6 +1,12 @@
+<<<<<<< HEAD
+import { IEmployee } from "./IEmployee"
+
+export class Backend implements IEmployee{
+=======
 import { Employee } from "./employee"
 
 export class Backend implements Employee{
+>>>>>>> master
 
     constructor(private name : string, private  project : string) {
     }

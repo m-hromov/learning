@@ -16,7 +16,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
     private static final String FIND_ALL = """
-            SELECT gc FROM GiftCertificate gc
+            SELECT gc FROM GiftCertificate gc order by gc.createDate DESC 
+            """;
+    private static final String FIND_ALL_SEARCH = """
+            SELECT gc FROM GiftCertificate gc 
+            WHERE gc.description LIKE %%s% OR gc.name LIKE %%s%
+            order by gc.createDate DESC 
             """;
     private static final String FIND_ALL_WITH_TAGS = """
             SELECT gc FROM GiftCertificate gc
@@ -30,7 +35,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
             SELECT gc FROM GiftCertificate gc ORDER BY gc.name %s
             """;
     private static final String FIND_ALL_ORDERED_BY_CREATION = """
-            SELECT gc FROM GiftCertificate gc ORDER BY gc.create_date %s
+            SELECT gc FROM GiftCertificate gc ORDER BY gc.createDate %s
             """;
     @PersistenceContext
     private EntityManager entityManager;
@@ -48,8 +53,20 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public List<GiftCertificate> findAll(Pageable paging) {
-        TypedQuery<GiftCertificate> findAllQuery =
-                entityManager.createQuery(FIND_ALL, GiftCertificate.class);
+        return null;
+    }
+
+    @Override
+    public List<GiftCertificate> findAll(Pageable paging, String search) {
+        TypedQuery<GiftCertificate> findAllQuery;
+        if (search != null) {
+            findAllQuery = entityManager.createQuery(
+                    "SELECT gc FROM GiftCertificate gc WHERE gc.description LIKE '%" + search
+                    + "%' OR gc.name LIKE '%"+search+"%' order by gc.createDate DESC", GiftCertificate.class);
+        } else {
+            findAllQuery = entityManager.createQuery(FIND_ALL, GiftCertificate.class);
+        }
+
         findAllQuery.setFirstResult((paging.getPage() - 1) * paging.getSize());
         findAllQuery.setMaxResults(paging.getSize());
         return findAllQuery.getResultList();

@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var frontend_1 = require("./frontend");
+var backend_1 = require("./backend");
+var company_1 = require("./company");
+var f1 = new frontend_1.Frontend("nameFront1", "projFront1");
+var f2 = new frontend_1.Frontend("nameFront2", "projFront2");
+var f3 = new frontend_1.Frontend("nameFront3", "projFront3");
+var b1 = new backend_1.Backend("nameBack1", "projBack1");
+var b2 = new backend_1.Backend("nameBack2", "projBack2");
+var b3 = new backend_1.Backend("nameBack3", "projBack3");
+var company = new company_1.Company();
+company.add(f1, f2, f3, b1, b2, b3);
+console.log("Names: ".concat(company.getNameList));
+console.log("Projects: ".concat(company.getProjectList));

@@ -1,22 +1,8 @@
-import { Employee } from "./Employee"
+import { Employee } from "./employee"
 
-class Company {
+export class Frontend extends Employee{
 
-    constructor(private employees : Employee[]) {}
-
-    getCurrentProject() {
-        return "EuropeCompany"
-    }
-
-    public set add(employee : Employee) {
-        this.employees.push(employee)
-    }
-
-    public getProjectList() : string[] {
-        return this.employees.map(e => e.getCurrentProject())
-    }
-
-    public getNameList() : string[] {
-        return this.employees.map(e => e.getName)
+    constructor(name : string, project : string) {
+        super(name, project)
     }
 }

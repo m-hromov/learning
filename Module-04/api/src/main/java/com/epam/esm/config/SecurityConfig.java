@@ -19,7 +19,16 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 
 @Configuration
@@ -27,11 +36,30 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
-    protected static final String[] PERMITTED_GET_OPERATIONS = {"/gifts/**", "/tags/**"};
+    protected static final String[] PERMITTED_GET_OPERATIONS = {"/gifts/**", "/tags/**", "/image-storage/**", "/favicon.ico"};
     protected static final String[] PERMITTED_ALL_OPERATIONS = {"/users/signin", "/users/signup", "/swagger-ui/**", "/v3/**", "/error"};
     private final AuthenticationEntryPoint authEntryPoint;
     @Value("${security.enabled: true}")
     private boolean securityEnabled;
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addResourceHandlers(ResourceHandlerRegistry registry) {
+                registry.addResourceHandler("/image-storage/**")
+                        .addResourceLocations("file:image-storage/");
+            }
+
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:4200")
+                        .allowedMethods("*")
+                        .allowedHeaders("*");
+            }
+        };
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -44,6 +72,8 @@ public class SecurityConfig {
             return http.formLogin().disable()
                     .csrf()
                     .disable()
+                    .cors()
+                    .and()
                     .authorizeHttpRequests(auth ->
                             auth.requestMatchers(HttpMethod.GET, PERMITTED_GET_OPERATIONS).permitAll()
                                     .requestMatchers(PERMITTED_ALL_OPERATIONS).permitAll()
@@ -58,7 +88,7 @@ public class SecurityConfig {
                     .accessDeniedHandler(accessDeniedHandler)
                     .authenticationEntryPoint(authEntryPoint)
                     .and()
-                    .addFilterBefore( new JwtAuthFilter(
+                    .addFilterBefore(new JwtAuthFilter(
                             PERMITTED_GET_OPERATIONS,
                             PERMITTED_ALL_OPERATIONS,
                             jwtService,
@@ -72,6 +102,8 @@ public class SecurityConfig {
             return http.formLogin().disable()
                     .csrf()
                     .disable()
+                    .cors()
+                    .and()
                     .authorizeHttpRequests(auth ->
                             auth.anyRequest().permitAll()
 

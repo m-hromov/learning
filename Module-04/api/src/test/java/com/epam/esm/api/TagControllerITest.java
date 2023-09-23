@@ -1,14 +1,11 @@
 package com.epam.esm.api;
 
 import com.epam.esm.LearningApplication;
-import com.epam.esm.dto.TagDto;
 import com.epam.esm.model.Tag;
 import com.epam.esm.model.paging.Pageable;
 import com.epam.esm.repository.TagRepository;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,14 +15,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -128,6 +121,6 @@ class TagControllerITest {
                         .param("id", tag3.getId().toString()))
                 .andExpect(status().isOk());
 
-        assertTrue(tagRepository.findAll(Pageable.builder().page(1).size(10).build()).isEmpty());
+        assertTrue(tagRepository.findAll(Pageable.builder().page(1).size(10).build(), ).isEmpty());
     }
 }

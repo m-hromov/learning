@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ControllerExceptionAdvice {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<Object> handleBusinessException(BusinessException exception) {
+        log.warn("Error:", exception);
         return ResponseEntity.status(exception.getHttpStatus()).body(mapToMessage(exception));
     }
 

@@ -1,6 +1,6 @@
-import { Employee } from '../../EuropeCompany/src/employee'
+import { IEmployee } from "./IEmployee"
 
-export class Frontend implements Employee{
+export class Frontend implements IEmployee{
 
     constructor(private name : string, private  project : string) {
     }

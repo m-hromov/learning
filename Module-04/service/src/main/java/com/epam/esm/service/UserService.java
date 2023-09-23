@@ -21,4 +21,6 @@ public interface UserService {
     void delete(Long id);
 
     User findByIdOrThrow(Long id);
+
+    UserLoginResponseDto findById(Long id);
 }

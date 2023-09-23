@@ -53,6 +53,12 @@ public class UserController {
         return ResponseEntity.ok(CollectionModel.of(response, selfLink));
     }
 
+    @GetMapping("current")
+    @SecurityRequirement(name = "Bearer authentication")
+    public ResponseEntity<UserLoginResponseDto> getCurrentUser(@AuthenticationPrincipal Long id) {
+        return ResponseEntity.ok(userService.findById(id));
+    }
+
     @PostMapping("signup")
     public ResponseEntity<SecurityToken> signup(@RequestBody UserRegisterRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED)

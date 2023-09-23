@@ -1,12 +1,11 @@
 export class Employee {
+    constructor(private name : string, private project : string) {}
 
-    constructor(private name : string) {}
-
-    getCurrentProject() {
-        return "EuropeCompany"
+    public get getCurrentProject() {
+        return this.project
     }
 
-    get getName() {
+    public get getName() {
         return this.name
     }
 }

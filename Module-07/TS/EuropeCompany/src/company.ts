@@ -1,14 +1,19 @@
-import { Employee } from "./Employee"
+import { Employee } from "./employee"
 
-class Company {
+export class Company {
+    private employees : Employee[] = []
 
-    constructor(private employees : Employee[]) {}
-
-    getCurrentProject() {
-        return "EuropeCompany"
+    public add(...employees : Employee[]) {
+        for (const employee of employees) {
+            this.employees.push(employee)
+        }
     }
 
-    public set add(employee : Employee) {
-        this.employees.push(employee)
+    public get getProjectList() : string[] {
+        return this.employees.map(e => e.getCurrentProject)
+    }
+
+    public get getNameList() : string[] {
+        return this.employees.map(e => e.getName)
     }
 }

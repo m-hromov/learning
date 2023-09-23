@@ -31,6 +31,9 @@ public class GiftCertificate {
     private Long duration;
 
     @Column
+    private String photoPath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV1F8AwmLQbvjs7GoSCKt-srwOv3vhGNAHGQ&usqp=CAU";
+
+    @Column
     private LocalDateTime createDate;
 
     @Column

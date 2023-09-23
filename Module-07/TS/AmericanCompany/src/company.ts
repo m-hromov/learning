@@ -1,9 +1,9 @@
-import { Employee } from "./employee"
+import { IEmployee } from "./IEmployee"
 
 export class Company {
-    private employees : Employee[] = []
+    private employees : IEmployee[] = []
 
-    public add(...employees : Employee[]) {
+    public add(...employees : IEmployee[]) {
         for (const employee of employees) {
             this.employees.push(employee)
         }

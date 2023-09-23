@@ -18,6 +18,7 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
     private Long id;
     private String name;
     private String description;
+    private String photoPath;
     private Double price;
     private Long duration;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy HH:mm:ss")
