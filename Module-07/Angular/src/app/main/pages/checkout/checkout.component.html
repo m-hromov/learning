@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
+</head>
+<body>
+
+<div class="row heading-box">
+  <div class="text">
+    Cart
+  </div>
+</div>
+<div class="container d-flex justify-content-center">
+  <div class="checkout-box col" >
+    <div class="row align-items-center" *ngFor="let cert of giftCertificates">
+      <img class="col img-details" src="{{cert.photoPath}}" alt="img">
+      <div class="col ml-12">
+        <div class="fw-bold">
+          {{cert.name}}
+        </div>
+        <div class="item-details-description mt-6">
+          {{cert.description}}
+        </div>
+      </div>
+      <div class="col fw-bold text-align-right">
+        ${{cert.price}}
+      </div>
+    </div>
+    <hr/>
+    <div class="row align-items-center text-align-right mt-12">
+      <div class="col fw-bold text-align-right">
+        Total ${{totalPrice}}
+      </div>
+    </div>
+    <div class="d-flex mt-50">
+      <div class="btns-box-form d-flex ml-auto">
+        <button class="btn btn-gray new-coupon-btn" (click)="clearCart()" type="button">Clear</button>
+        <button class="btn btn-green new-coupon-btn ml-12" (click)="checkout()">Checkout</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

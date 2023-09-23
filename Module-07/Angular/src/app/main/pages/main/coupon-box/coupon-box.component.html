@@ -1,0 +1,27 @@
+<div class="coupon-item-box" *ngFor="let cert of giftCertificates">
+  <a routerLink="/item-details/{{cert.id}}" class="row">
+    <img src="{{cert.photoPath}}" alt="img" [height]="320" [width]="320">
+  </a>
+  <div class="coupon-description-box">
+    <div class="row">
+      <div class="col fw-bold fs-28">
+        {{cert.name}}
+      </div>
+      <div class="col ml-auto material-icons">favorite</div>
+    </div>
+    <div class="d-grid">
+      <div class="col grid-r1-c1 description">
+        {{cert.description}}
+      </div>
+      <div class="col ml-auto grid-r1-c2">
+        Expires in {{cert.duration}} days
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        {{cert.price | currencyCustom: 'UAH' : false}}
+      </div>
+      <button class="btn btn-gray col ml-auto" (click)="addToCart(cert.id)">Add to cart</button>
+    </div>
+  </div>
+</div>

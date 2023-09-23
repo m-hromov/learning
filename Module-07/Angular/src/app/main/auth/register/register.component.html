@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
+</head>
+<body>
+<div class="container d-flex justify-content-center">
+  <div class="register-box justify-content-center">
+    <div class="row heading-box">
+      <div class="text">
+        Register
+      </div>
+    </div>
+    <form class="box-form" [formGroup]="registerForm" (ngSubmit)="onSubmit(registerForm)">
+      <div class="col">
+        <label class="mt-12" for="login">Login Name</label>
+        <input class="row" id="login" type="text" formControlName="login">
+        <label class="mt-6" for="password">Password</label>
+        <input class="row" id="password" type="text" formControlName="password">
+        <label class="mt-6" for="email">Email</label>
+        <input class="row" id="email" type="text">
+
+      </div>
+      <div class="col">
+        <label class="mt-12" for="firstName">First Name</label>
+        <input class="row" id="firstName" type="text">
+        <label class="mt-6" for="repeatPassword">Repeat Password</label>
+        <input class="row" id="repeatPassword" type="text" formControlName="confirmPassword">
+        <div *ngIf="registerForm.errors?.['match_error']">
+          {{registerForm.errors?.['match_error']}}
+        </div>
+
+        <label class="mt-6" for="address">Address</label>
+        <input class="row" id="address" type="text">
+        <div class="btns-box-form d-flex mt-12">
+          <button class="btn btn-gray" type="reset">Cancel</button>
+          <button class="btn btn-green ml-12" type="submit">Login</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

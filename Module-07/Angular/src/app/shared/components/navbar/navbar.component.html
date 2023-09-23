@@ -1,0 +1,61 @@
+<nav class="navbar">
+  <div class="nav-links-inline mr-auto ml-12">
+    <button [ngClass]="['material-icons']" mat-button [matMenuTriggerFor]="menu"
+            aria-label="Example icon-button with a menu">
+      menu
+    </button>
+    <mat-menu #menu="matMenu">
+      <a mat-menu-item routerLink="/checkout">
+        <mat-icon>shopping_cart_checkout</mat-icon>
+        <span>Checkout</span>
+      </a>
+      <a mat-menu-item routerLink="/item-details">
+        <mat-icon>notifications_off</mat-icon>
+        <span>Item details</span>
+      </a>
+      <a mat-menu-item routerLink="/auth/login">
+        <mat-icon>notifications_off</mat-icon>
+        <span>Login</span>
+      </a>
+      <a mat-menu-item routerLink="/">
+        <mat-icon>notifications_off</mat-icon>
+        <span>Main</span>
+      </a>
+      <a mat-menu-item routerLink="/new-coupon">
+        <mat-icon>notifications_off</mat-icon>
+        <span>New coupon</span>
+      </a>
+      <a mat-menu-item routerLink="/auth/register">
+        <mat-icon>notifications_off</mat-icon>
+        <span>Register</span>
+      </a>
+    </mat-menu>
+    <a routerLink="/" class="logo">
+      Logo
+    </a>
+  </div>
+  <div class="search-container">
+    <label>
+      <input #search class="search-box" placeholder="Search by item name" type="text" (input)="doSearch()">
+    </label>
+    <div class="search-dropdown">
+      All categories <div class="material-icons">expand_more</div>
+      <ul class="dropdown">
+        <li><a href="index.html">Dropdown</a></li>
+        <li><a href="index.html">Dropdown</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="nav-links-inline ml-auto mr-12">
+    <a href="#" class="material-icons mr-12 clr-items-grey">favorite</a>
+    <a routerLink="/checkout" class="material-icons mr-12 clr-items-grey">shopping_cart</a>
+    <div *ngIf="!isAuthorized()">
+      <a routerLink="/auth/login" class="mr-6">Login</a>
+      <div class="vr"></div>
+      <a routerLink="/auth/register" class="ml-6">Sign Up</a>
+    </div>
+    <div *ngIf="isAuthorized()">
+      <a routerLink="/" (click)="signout()">Sign Out</a>
+    </div>
+  </div>
+</nav>

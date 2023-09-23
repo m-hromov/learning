@@ -1,0 +1,82 @@
+@import "../../../../globals"
+
+.logo
+  font-size: 24px
+
+.navbar
+  width: 100%
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 5px 0
+  background-color: $clr_bg1
+  position: sticky
+  a
+    box-sizing: border-box
+    color: inherit
+    text-decoration: none
+
+.search-container
+  border: $common-border-style
+  align-items: center
+  display: grid
+  grid-auto-flow: column
+  grid-column-gap: 2px
+  position: absolute
+  *
+    box-sizing: border-box
+
+.search-container input[type=text]
+  float: left
+  padding: 6px
+  height: 100%
+  font-size: 17px
+  text-align: left
+  border: none !important
+
+.search-container input[type=text]:focus
+  outline: none !important
+
+.navbar
+  .search-container
+    .search-dropdown
+      display: flex
+      border-left: $common-border-style
+      align-items: center !important
+      padding: 6px
+      float: right
+      font-size: 17px
+      cursor: pointer
+      width: 100%
+      height: 100%
+
+      a
+        text-align: center
+
+        .material-icons
+          font-size: 14px
+
+.dropdown
+  border: $common-border-style
+  background-color: $clr_bg1
+  position: absolute
+  display: none
+  top: 36px
+  left: 223px
+
+.dropdown li + li
+  margin-top: 2px
+
+.dropdown li
+  width: 8em
+  text-align: center
+
+.dropdown li:hover
+  background-color: $clr_bg2
+
+.search-container:hover .dropdown
+  display: block
+
+.nav-links-inline
+  display: flex !important
+  align-items: center !important
