@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <link rel="apple-touch-icon" href="icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+
+    <meta name="theme-color" content="#fafafa">
+</head>
+<body>
+<!--<nav class="navbar">-->
+<!--    <div class="nav-links-inline mr-auto">-->
+<!--        <div class="material-icons">-->
+<!--            menu-->
+<!--        </div>-->
+<!--        <div class="logo">-->
+<!--            Logo-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="search-container">-->
+<!--        <label>-->
+<!--            <input class="search-box" placeholder="Search by item name" type="text">-->
+<!--        </label>-->
+<!--        <div class="search-dropdown">-->
+<!--            <a href="#">All categories-->
+<!--                <div class="material-icons">expand_more</div>-->
+<!--            </a>-->
+<!--            <ul class="dropdown">-->
+<!--                <li><a href="index.html">Dropdown</a></li>-->
+<!--                <li><a href="index.html">Dropdown</a></li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="nav-links-inline ml-auto mr-12">-->
+<!--        <a href="#" class="material-icons mr-12 clr-items-grey">favorite</a>-->
+<!--        <a href="#" class="material-icons mr-12 clr-items-grey">shopping_cart</a>-->
+<!--        <a href="#" class="mr-6">Login</a>-->
+<!--        <div class="vr"></div>-->
+<!--        <a href="#" class="ml-6">Sign Up</a>-->
+<!--    </div>-->
+
+<!--</nav>-->
+<div class="row heading-box">
+    <div class="text">
+        Add new coupon
+    </div>
+</div>
+<div class="container d-flex justify-content-center">
+        <form class="box-form col" method="post">
+            <div class="d-flex">
+                <div class="col">
+                    <label class="mt-12" for="company">Company</label>
+                    <input class="row" id="company" type="text">
+                </div>
+                <div class="col ml-12">
+                    <label class="mt-12" for="itemName">Item Name</label>
+                    <input class="row" id="itemName" type="text">
+                </div>
+            </div>
+            <div class="d-flex">
+                <div class="col">
+                    <label class="mt-6" for="category">Category</label>
+                    <input class="row" id="category" type="text">
+                    <label class="mt-6" for="valitTo">Valid to</label>
+                    <input class="row" id="valitTo" type="datetime-local">
+                </div>
+                <div class="col ml-12">
+                    <label class="mt-6" for="shortDescription">Short description</label>
+                    <textarea class="row" id="shortDescription" type="text"></textarea>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div class="col">
+                    <label class="mt-6" for="price">Price</label>
+                    <input class="row" id="price" type="text">
+                    <label class="mt-6" for="images">Images</label>
+                    <input class="row" id="images" type="file">
+                </div>
+                <div class="col ml-12">
+                    <label class="mt-6" for="longDescription">Long description</label>
+                    <textarea class="row" id="longDescription" type="text"></textarea>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div class="btns-box-form d-flex ml-auto">
+                    <button class="btn btn-gray new-coupon-btn" type="submit">Back</button>
+                    <button class="btn btn-green new-coupon-btn ml-12" type="submit">Save</button>
+                </div>
+            </div>
+        </form>
+</div>
+</body>
+</html>
