@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
+</head>
+<body>
+<heading-box></heading-box>
+<div class="container d-flex fd-col align-items-center">
+  <coupon-box (certId)="addToCart($event)" [giftCertificates]="giftCertificates"
+              class="container-coupon d-flex justify-content-center">
+  </coupon-box>
+</div>
+</body>
+</html>

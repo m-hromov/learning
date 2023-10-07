@@ -1,0 +1,46 @@
+.coupon-item-box {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.coupon-item-box img {
+  max-width: 320px;
+  max-height: 320px;
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.coupon-description-box {
+  padding: 10px !important;
+  width: 300px !important;
+  background-color: #fff;
+}
+.coupon-description-box .btn:hover {
+  background-color: #fff;
+}
+.coupon-description-box .btn {
+  cursor: pointer;
+  border: none;
+  color: #3eb2f4;
+  width: fit-content;
+}
+.coupon-description-box .btn .material-icons {
+  color: #c3c3c3;
+}
+
+.description {
+  height: 100px;
+  max-height: 100px;
+  max-width: 100px;
+  overflow: scroll;
+}
+
+.description::-webkit-scrollbar {
+  width: 0;
+}
+
+.col {
+  flex: none;
+}
+
+/*# sourceMappingURL=coupon-box.component.css.map */

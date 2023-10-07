@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
+</head>
+<body>
+
+<div class="container d-flex justify-content-center">
+  <form class="login-box justify-content-center" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="circle d-grid">
+      <div class="logo">
+        Logo
+      </div>
+    </div>
+    <input class="row" placeholder="Login" type="text" formControlName="login">
+    <input class="row" placeholder="Password" type="text" formControlName="password">
+    <button class="btn btn-green" type="submit">Login</button>
+  </form>
+</div>
+</body>
+</html>

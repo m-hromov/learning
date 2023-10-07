@@ -1,0 +1,19 @@
+.coupon-description-box {
+  padding: 12px;
+  width: 300px;
+  background-color: #fff;
+}
+.coupon-description-box .btn:hover {
+  background-color: #fff;
+}
+.coupon-description-box .btn {
+  cursor: pointer;
+  border: none;
+  color: #3eb2f4;
+  width: fit-content;
+}
+.coupon-description-box .btn .material-icons {
+  color: #c3c3c3;
+}
+
+/*# sourceMappingURL=item-details.component.css.map */
